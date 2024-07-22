@@ -1,0 +1,14 @@
+<h1 class="text-blue-500 text-lg">Hello There</h1>
+
+<button hx-get="/attendances">GET request</button>
+
+<div>
+    <input type="text" name="q"
+        hx-get="/search"
+        hx-trigger="keyup delay:500ms changed"
+        hx-target="#search-results"
+        placeholder="Search..."
+        class="border border-gray-500"
+    >
+    <div id="search-results"></div>
+</div>
