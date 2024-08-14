@@ -38,3 +38,8 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+# ignore version manager files - (rbenv, asdf, nvm)
+.ruby-version
+.tool-versions
+.node-version
