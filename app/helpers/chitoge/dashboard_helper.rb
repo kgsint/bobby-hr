@@ -1,0 +1,2 @@
+module Chitoge::DashboardHelper
+end

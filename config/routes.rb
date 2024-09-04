@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: 'dashboard#index'
+  root to: 'chitoge/dashboard#index'
 
   # for authentication
   get 'register' => 'auth/register#new'
@@ -15,4 +15,8 @@ Rails.application.routes.draw do
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener"
 
+
+  namespace :chitoge do
+    get "/dashboard" => "dashboard#index"
+  end
 end

@@ -1,0 +1,74 @@
+
+  <aside id="logo-sidebar" class="h-screen min-h-full transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 w-[10%]" aria-label="Sidebar">
+     <div class="h-full px-3 pb-4 overflow-y-auto bg-grey-500 ">
+        <ul class="space-y-2 font-medium ms-3 mt-5">
+           <li>
+              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 ">
+                 <%= render_svg 'dashboard' %>
+                 <span class="ms-1">Dashboard</span>
+              </a>
+           </li>
+           <li>
+              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 ">
+               <%= render_svg 'attendance' %>
+               <span class="ms-1">Attendance</span>
+              </a>
+           </li>
+           <li>
+              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+               <%= render_svg 'payroll' %>
+               <span class="ms-1">Payroll</span>
+
+              </a>
+           </li>
+           <li>
+              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+                 <%= render_svg 'users' %>
+                 <span class="ms-1">Employees</span>
+              </a>
+           </li>
+           <li>
+              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+               <%= render_svg 'notification' %>
+               <span class="ms-1">Notification</span>
+              </a
+           </li>
+           <hr>
+           <li>
+               <form action="/logout" method="POST" id="logout-form">
+                   <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+               </form>
+               <button form="logout-form" class="flex items-center">
+                   <%= render_svg 'sidenav' %> Logout
+               </button>
+           </li>
+        </ul
+     </div>
+  </aside>
+
+  <div class="px-4 col-span-10 pt-5 w-[90%]">
+     <div class="p-4 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div>
+            <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">12</h5>
+               <p class="font-normal text-gray-700">Total Leaves</p>
+            </a>
+         </div>
+
+         <div>
+            <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">100</h5>
+               <p class="font-normal text-gray-700">Total Employees</p>
+            </a>
+         </div>
+
+         <div>
+            <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">12</h5>
+               <p class="font-normal text-gray-700">Total Late</p>
+            </a>
+         </div>
+      </div>
+     </div>
+  </div>
