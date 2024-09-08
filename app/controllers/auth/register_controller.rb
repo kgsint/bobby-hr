@@ -1,7 +1,6 @@
-class Auth::RegisterController < ApplicationController
+class Auth::RegisterController < Auth::BaseAuthenticationController
   layout 'auth'
   before_action :set_user, only: :create
-  skip_before_action :authenticate_user
 
   def new
     @user = User.new
@@ -12,6 +11,8 @@ class Auth::RegisterController < ApplicationController
       flash[:notice] = "user has been created"
 
       redirect_to login_path
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 

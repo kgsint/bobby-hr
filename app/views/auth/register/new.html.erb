@@ -1,3 +1,4 @@
+
 <div class="grid md:grid-cols-2 bg-gray-100 shadow-md rounded-lg mx-5">
     <div class="mx-0 bg-blue-100 invisible md:visible">
         <h1 class="text-center">LOGO</h1>
@@ -9,16 +10,25 @@
         <div class="relative z-0 w-full mb-5 group">
             <%= f.text_field :name, class: "form_input peer", id: "name", placeholder: " ", required: true %>
             <%= f.label :name, for: "name", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @user.errors[:name].any? %>
+                <p class="text-sm text-red-500">Name <%= @user.errors[:name].first %></p>
+            <% end %>
         </div>
         <%# email address %>
         <div class="relative z-0 w-full mb-5 group">
             <%= f.email_field :email, id: "email", class: "form_input peer", placeholder: " ", required: true %>
             <%= f.label :email, for: "email", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"  %>
+            <% if @user.errors[:email].any? %>
+                <p class="text-sm text-red-500">Email Address <%= @user.errors[:email].first %></p>
+            <% end %>
         </div>
         <%# password %>
         <div class="relative z-0 w-full mb-5 group">
             <%= f.password_field :password, class: "form_input peer", id: "password", placeholder: " ", required: true %>
             <%= f.label :password, for: "password", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @user.errors[:password].any? %>
+                <p class="text-sm text-red-500">Password <%= @user.errors[:password].first %></p>
+            <% end %>
         </div>
         <%# confirm password %>
         <div class="relative z-0 w-full mb-5 group">
@@ -30,10 +40,16 @@
             <div class="relative z-0 w-full mb-5 group">
                 <%= f.text_field :phone_number, id: "phone_number", class: "form_input peer", placeholder: " ", required: true %>
                 <%= f.label :phone_number, for: "phone_number", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+                <% if @user.errors[:phone_number].any? %>
+                    <p class="text-sm text-red-500">Phone Number <%= @user.errors[:phone_number].first %></p>
+                <% end %>
             </div>
             <div class="relative z-0 w-full mb-5 group">
                 <%= f.text_field :company_id, id: "company", class: "form_input peer", placeholder: " ", required: true %>
                 <%= f.label :company_id, for: "company", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+                <% if @user.errors[:company_id].any? %>
+                    <p class="text-sm text-red-500">Company <%= @user.errors[:company_id].first %></p>
+                <% end %>
             </div>
         </div>
         <%# submit button %>

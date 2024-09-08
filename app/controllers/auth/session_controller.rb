@@ -1,7 +1,5 @@
-class Auth::SessionController < ApplicationController
+class Auth::SessionController < Auth::BaseAuthenticationController
   layout 'auth'
-
-  skip_before_action :authenticate_user
 
   def new
 
@@ -12,6 +10,8 @@ class Auth::SessionController < ApplicationController
       login(user)
       redirect_to root_path
     else
+      flash[:old_email] = params[:email]
+      flash[:error] = "The provided credentials do not match."
       render :new, status: :unprocessable_entity
     end
   end

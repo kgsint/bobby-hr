@@ -14,6 +14,13 @@ module Authentication
       end
     end
 
+    def guest_user_only
+      user = User.where(id: session[:user_id]).first
+      if user
+        redirect_to root_path
+      end
+    end
+
     def login(user)
       Current.user = user
       reset_session
