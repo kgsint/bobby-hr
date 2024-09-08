@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
-  get "up" => "rails/health#show", as: :rails_health_check
+  root to: 'dashboard#index'
 
   # for authentication
-  get '/register' => 'auth/register#new'
-  post '/register' => 'auth/register#create'
+  get 'register' => 'auth/register#new'
+  post 'register' => 'auth/register#create'
 
-  get '/log-in' => 'auth/session#new'
-  post '/log-in' => 'auth/session#create'
+  get 'login' => 'auth/session#new'
+  post 'login' => 'auth/session#create'
+
+  post 'logout' => 'auth/session#destroy'
 end

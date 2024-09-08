@@ -1,0 +1,13 @@
+<div>
+    <% if Current.user.nil? %>
+    You're a guest
+    <% else %>
+        You're logged in, <%= Current.user.name %>
+    <% end %>
+
+    <%#<%= link_to "Logout", logout_path, method: :post, class: "" %>
+    <form action="/logout" method="POST">
+        <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+        <button>Logout</button>
+    </form>
+</div>

@@ -1,6 +1,7 @@
 class Auth::RegisterController < ApplicationController
   layout 'auth'
   before_action :set_user, only: :create
+  skip_before_action :authenticate_user
 
   def new
     @user = User.new
@@ -10,7 +11,7 @@ class Auth::RegisterController < ApplicationController
     if @user.save
       flash[:notice] = "user has been created"
 
-      redirect_to log_in_path
+      redirect_to login_path
     end
   end
 
