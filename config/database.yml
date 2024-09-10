@@ -12,3 +12,9 @@ development:
   database: bobby_hr
   username: postgres
   password: password
+
+test:
+  adapter: sqlite3
+  database: storage/db.sqlite3
+  pool: 5
+  timeout: 5000

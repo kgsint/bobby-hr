@@ -1,5 +1,6 @@
 class Auth::SessionController < Auth::BaseAuthenticationController
-  layout 'auth'
+
+  before_action :redirect_if_authenticated, except: :destroy
 
   def new
 

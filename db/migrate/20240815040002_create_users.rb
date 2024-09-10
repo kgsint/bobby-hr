@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration[7.1]
       t.integer :company_id
       t.string :role, default: 'employee'
       t.timestamp :last_login_at
+      t.datetime :date_of_bith
 
       t.timestamps
     end

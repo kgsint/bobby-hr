@@ -1,6 +1,7 @@
 class Auth::RegisterController < Auth::BaseAuthenticationController
-  layout 'auth'
+
   before_action :set_user, only: :create
+  before_action :redirect_if_authenticated
 
   def new
     @user = User.new
@@ -18,11 +19,11 @@ class Auth::RegisterController < Auth::BaseAuthenticationController
 
   private
 
-  def set_user
-    @user = User.new(user_params.except :confirm_password)
-  end
+    def set_user
+      @user = User.new(user_params.except :confirm_password)
+    end
 
-  def user_params
-    params.require(:user).permit(:name, :email, :phone_number, :password, :confirm_password, :company_id)
-  end
+    def user_params
+      params.require(:user).permit(:name, :email, :phone_number, :password, :confirm_password, :company_id)
+    end
 end

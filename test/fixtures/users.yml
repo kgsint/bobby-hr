@@ -4,6 +4,7 @@ one:
   name: MyString
   email: MyString
   phone_number: MyString
+  password_digest: $2a$12$m7DANX5S7dRK/2PklpdfluHU82n7kkcjdLMx3FogBJArJMuwobyPG
   role: MyString
   last_login_at: 2024-08-15 10:30:02
 
@@ -11,5 +12,6 @@ two:
   name: MyString
   email: MyString
   phone_number: MyString
+  password_digest: $2a$12$m7DANX5S7dRK/2PklpdfluHU82n7kkcjdLMx3FogBJArJMuwobyPG
   role: MyString
   last_login_at: 2024-08-15 10:30:02

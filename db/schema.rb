@@ -11,9 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_08_15_040002) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -22,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_040002) do
     t.integer "company_id"
     t.string "role", default: "employee"
     t.datetime "last_login_at", precision: nil
+    t.datetime "date_of_bith"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
