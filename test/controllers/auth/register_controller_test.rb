@@ -7,7 +7,9 @@ class Auth::RegisterControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
   end
 
-  test "it creates users with correct params" do
+  test "it creates users" do
+    assert_nil User.find_by(email: "someone@company.com")
+
     post register_url, params: {
       user: {
         name: "someone",
@@ -16,6 +18,6 @@ class Auth::RegisterControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to login_url
+    assert_not_nil User.find_by(email: "someone@company.com")
   end
 end
