@@ -107,6 +107,9 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
+    inline_svg (1.10.0)
+      activesupport (>= 3.0)
+      nokogiri (>= 1.6)
     io-console (0.7.2)
     irb (1.14.0)
       rdoc (>= 4.0.0)
@@ -264,6 +267,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  inline_svg
   jbuilder
   jsbundling-rails
   pg (~> 1.1)
