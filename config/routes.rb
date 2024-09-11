@@ -9,4 +9,7 @@ Rails.application.routes.draw do
   post 'login' => 'auth/session#create'
 
   post 'logout' => 'auth/session#destroy'
+
+  get 'forget-password' => 'auth/forget_password#new'
+  post 'forget-password' => 'auth/forget_password#create'
 end
