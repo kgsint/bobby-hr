@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: User One
+  email: userone@gmail.com
+  phone_number: 98765987
+  password_digest: $2a$12$m7DANX5S7dRK/2PklpdfluHU82n7kkcjdLMx3FogBJArJMuwobyPG
+  role: MyString
+  last_login_at: 2024-08-15 10:30:02
+
+two:
+  name: User Two
+  email: usertwo@gmail.com
+  phone_number: 098768765
+  password_digest: $2a$12$m7DANX5S7dRK/2PklpdfluHU82n7kkcjdLMx3FogBJArJMuwobyPG
+  role: MyString
+  last_login_at: 2024-08-15 10:30:02

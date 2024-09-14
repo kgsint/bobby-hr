@@ -1,7 +1,18 @@
 Rails.application.routes.draw do
-  get "up" => "rails/health#show", as: :rails_health_check
+  root to: 'dashboard#index'
 
-  root "test#index"
+  # for authentication
+  get 'register' => 'auth/register#new'
+  post 'register' => 'auth/register#create'
 
-  get "/search", to: "test#search"
+  get 'login' => 'auth/session#new'
+  post 'login' => 'auth/session#create'
+
+  post 'logout' => 'auth/session#destroy'
+
+  get 'forget-password' => 'auth/forget_password#new'
+  post 'forget-password' => 'auth/forget_password#create'
+
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
+
 end

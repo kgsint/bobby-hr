@@ -36,5 +36,11 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+.byebug_history
 
 /node_modules
+
+# ignore version manager files - (rbenv, asdf, nvm)
+.ruby-version
+.tool-versions
+.node-version
