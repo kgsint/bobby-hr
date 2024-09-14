@@ -12,4 +12,7 @@ Rails.application.routes.draw do
 
   get 'forget-password' => 'auth/forget_password#new'
   post 'forget-password' => 'auth/forget_password#create'
+
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
+
 end
