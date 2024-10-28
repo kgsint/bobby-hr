@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   get 'forget-password' => 'auth/forget_password#new'
   post 'forget-password' => 'auth/forget_password#create'
 
+  get 'reset-password/:token' => 'auth/password_reset#new'
+
   mount LetterOpenerWeb::Engine, at: "/letter_opener"
 
 
