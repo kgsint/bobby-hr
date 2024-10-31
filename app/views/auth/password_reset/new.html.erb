@@ -1,1 +1,27 @@
-This is reset password form
+<div class="bg-gray-100 shadow-md rounded-lg grid mx-auto w-full">
+    <div class="col-sm-span-2 px-10">
+    <h1 class="text-2xl text-center text-blue-500 mt-5">Reset Password</h1>
+    <%= form_with url: :reset_password, method: :post, html: { class: "px-5 py-12" } do |f| %>
+        <input type="hidden" name="email" value="<%= params[:email] %>" />
+        <%# password %>
+        <div class="relative z-0 w-full mb-5 ">
+            <%= f.password_field :password, class: "form_input peer", id: "password", required: true, placeholder: " " %>
+            <%= f.label :password, for: "password", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+        </div>
+
+        <%# confirm password %>
+        <div class="relative z-0 w-full mb-5 ">
+            <%= f.password_field :password_confirmation, class: "form_input peer", id: "confirm_password", required: true, placeholder: " " %>
+            <%= f.label :confirm_password, for: "confirm_password", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+        </div>
+
+        <div>
+            <%= f.submit "Submit", class: "text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center mt-10" %>
+        </div>
+
+        <div class="flex items-center justify-center mt-10 text-gray-500">
+            <%= link_to "< Back to Login", login_path, class: "text-sm" %>
+        </div>
+    <% end %>
+    </div>
+</div>
