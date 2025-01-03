@@ -22,10 +22,10 @@
               </a>
            </li>
            <li>
-              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
-                 <%= render_svg 'users' %>
-                 <span class="ms-1">Employees</span>
-              </a>
+            <%= link_to chitoge_employees_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+              <%= render_svg 'users' %>
+              <span class="ms-1">Employees</span>
+            <% end %>
            </li>
            <li>
               <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
@@ -38,7 +38,7 @@
                <form action="/logout" method="POST" id="logout-form">
                    <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
                </form>
-               <button form="logout-form" class="flex items-center">
+               <button form="logout-form" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
                    <%= render_svg 'sidenav' %> Logout
                </button>
            </li>
