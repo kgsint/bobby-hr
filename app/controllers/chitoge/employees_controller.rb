@@ -27,20 +27,33 @@ class Chitoge::EmployeesController < ApplicationController
     end
   end
 
-  def show
+  def update
     @employee = Employee.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    redirect_to employees_path, alert: "Employee not found."
+    if @employee.update(employee_params)
+      redirect_to chitoge_employees_path, notice: 'Employee was successfully updated.'
+    end
+  end
+
+  def show
+    @employee = Employee.find_by(id: params[:id])
+    if @employee
+      respond_to do |format|
+        format.html 
+        format.json { render json: @employee } 
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to chitoge_employees_path, alert: "Employee not found." }
+        format.json { render json: { error: "Employee not found" }, status: :not_found }
+      end
+    end
   end
 
   def destroy
-    @employee = Employee.find_by(id: params[:id])
-  
-    if @employee
-      @employee.destroy
-      redirect_to chitoge_employees_path, notice: 'Employee was successfully deleted.'
-    else
-      redirect_to chitoge_employees_path, alert: 'Employee not found.'
+    @employee = Employee.find(params[:id])
+    @employee.destroy
+    respond_to do |format|
+      format.json { render json: { message: "Employee was successfully deleted." }, status: :ok }
     end
   end
 

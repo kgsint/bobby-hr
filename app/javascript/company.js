@@ -9,31 +9,31 @@ setTimeout(function() {
   }, 3000);
 
 
-
 document.addEventListener("DOMContentLoaded", function () {
-    const employeeModal = document.getElementById("employeeModal");
+    const companyModal = document.getElementById("companyModal");
     const closeModalButton = document.getElementById("closeModal");
 
     const deleteModal = document.getElementById("deleteModal");
     const cancelDeleteButton = document.getElementById("cancelDelete");
     const confirmDeleteButton = document.getElementById("confirmDelete");
-    let employeeIdToDelete = null;
+    let entityIdToDelete = null;
+    let entityTypeToDelete = null;
 
     function openModal() {
-      employeeModal.classList.add("show"); // Add the 'show' class to trigger the animation
+      companyModal.classList.add("show"); // Add the 'show' class to trigger the animation
     }
   
     // Function to close the modal
     function closeModal() {
-      employeeModal.classList.remove("show");
+      companyModal.classList.remove("show");
       setTimeout(() => {
         document.getElementById("modalContent").innerHTML = "";
       }, 400);
     }
 
-    employeeModal.addEventListener("click", function (event) {
+    companyModal.addEventListener("click", function (event) {
       // Check if the click target is the modal itself (background overlay)
-      if (event.target === employeeModal || event.target.classList.contains("overlay")) {
+      if (event.target === companyModal || event.target.classList.contains("overlay")) {
         closeModal();
       }
     });
@@ -45,8 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
     row.addEventListener("click", function (event) {
       if (event.target.closest(".action-buttons")) return;
 
-      const employeeId = this.getAttribute("data-id");
-      fetch(`/chitoge/employees/${employeeId}.json`)
+      const entityId = this.getAttribute("data-id");
+      const entityType = this.getAttribute("data-type");
+      fetch(`/chitoge/${entityType}s/${entityId}.json`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -56,43 +57,39 @@ document.addEventListener("DOMContentLoaded", function () {
         .then((data) => {
           const modalContent = document.getElementById("modalContent");
           modalContent.innerHTML = `
-            <p class="mb-2"><strong class="text-gray-700">Name:</strong> ${data.first_name} ${data.last_name}</p>
-            <p class="mb-2"><strong class="text-gray-700">Email:</strong> ${data.email}</p>
-            <p class="mb-2"><strong class="text-gray-700">Phone:</strong> ${data.phone_number}</p>
-            <p class="mb-2"><strong class="text-gray-700">Job Title:</strong> ${data.job_title}</p>
-            <p class="mb-2"><strong class="text-gray-700">Hire Date:</strong> ${new Date(data.hire_at).toLocaleDateString()}</p>
-            <p class="mb-2"><strong class="text-gray-700">Department ID:</strong> ${data.department_id}</p>
-            <p class="mb-2"><strong class="text-gray-700">Salary:</strong> $${data.salary}</p>
-            <p class="mb-2"><strong class="text-gray-700">Hourly Rate:</strong> $${data.hourly_rate}</p>
+            <p class="mb-2"><strong class="text-gray-700">Name:</strong> ${data.name}</p>
+            <p class="mb-2"><strong class="text-gray-700">Code:</strong> ${data.code}</p>
           `;
           openModal();
         })
         .catch((error) => {
-          console.error("Error fetching employee details:", error);
-          alert("Failed to load employee details. Please try again.");
+          console.error("Error fetching company details:", error);
+          alert("Failed to load company details. Please try again.");
         });
     });
   });
 
-
   
     // Function to open the delete modal
-    function openDeleteModal(employeeId) {
-      employeeIdToDelete = employeeId; // Store the employee ID
-      deleteModal.classList.remove("hidden");
+    function openDeleteModal(entityId, entityType) {
+      entityIdToDelete = entityId; // Store the entity ID
+    entityTypeToDelete = entityType; // Store the entity type
+    deleteModal.classList.remove("hidden");
     }
   
     // Function to close the modal
     function closeDeleteModal() {
       deleteModal.classList.add("hidden");
-      employeeIdToDelete = null; // Reset the employee ID
+      entityIdToDelete = null;
+      entityTypeToDelete = null;
     }
   
     // Event listener for all delete buttons
     document.querySelectorAll(".delete-button").forEach((button) => {
       button.addEventListener("click", function () {
-        const employeeId = this.getAttribute("data-id"); 
-        openDeleteModal(employeeId); 
+        const entityId = this.getAttribute("data-id");
+        const entityType = this.getAttribute("data-type");
+        openDeleteModal(entityId, entityType);
       });
     });
   
@@ -100,11 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
   
     confirmDeleteButton.addEventListener("click", function (event) {
       event.preventDefault();
-      console.log("Employee ID to delete:", employeeIdToDelete);
+      console.log(`Entity ID to delete: ${entityIdToDelete}, Entity type: ${entityTypeToDelete}`);
     
-      if (employeeIdToDelete) {
+      if (entityIdToDelete && entityTypeToDelete) {
         // Send a DELETE request to the server with the employee's ID
-        fetch(`/chitoge/employees/${employeeIdToDelete}`, {
+        fetch(`/chitoge/${entityTypeToDelete}/${entityIdToDelete}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -115,26 +112,23 @@ document.addEventListener("DOMContentLoaded", function () {
             if (response.ok) {
               return response.json();
             } else {
-              throw new Error("Failed to delete the employee");
+              throw new Error(`Failed to delete the ${entityTypeToDelete}`);
             }
-          })
-          .then((data) => {
+            })
+            .then((data) => {
             console.log(data.message);
             window.location.reload();
 
-            const employeeRow = document.querySelector(`tr[data-id="${employeeIdToDelete}"]`);
-            if (employeeRow) {
-              employeeRow.remove(); 
+            const entityRow = document.querySelector(`tr[data-id="${entityIdToDelete}"][data-type="${entityTypeToDelete}"]`);
+            if (entityRow) {
+              entityRow.remove();
             }
             closeDeleteModal(); 
-          })
-          .catch((error) => {
+            })
+            .catch((error) => {
             console.error("Error:", error);
           });
       }
     });
-
-
-
 
   });
