@@ -20,6 +20,18 @@
                </a>
             </li>
             <li>
+                <%= link_to chitoge_companies_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+                    <%= render_svg 'company' %>
+                    <span class="ms-1">Company</span>
+                <% end %>
+            </li>
+            <!-- <li>
+                <%= link_to chitoge_departments_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+                    <%= render_svg 'departmnet' %>
+                    <span class="ms-1">Department</span>
+                <% end %>
+            </li> -->
+            <li>
                 <%= link_to chitoge_employees_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
                     <%= render_svg 'users' %>
                     <span class="ms-1">Employees</span>

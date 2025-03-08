@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   namespace :chitoge do
     resources :employees
+    resources :departments
+    resources :companies
     get 'employees/index'
     
     get "/dashboard" => "dashboard#index"
