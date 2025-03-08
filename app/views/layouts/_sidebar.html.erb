@@ -1,0 +1,98 @@
+<aside id="logo-sidebar" class="h-screen min-h-full transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 w-[10%] drop-shadow-lg" aria-label="Sidebar">
+    <div class="h-full px-3 pb-4 overflow-y-auto bg-grey-500 ">
+        <ul class="space-y-2 font-medium ms-3 mt-5">
+            <li>
+               <a href="/" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 ">
+                    <%= render_svg 'dashboard' %>
+                    <span class="ms-1">Dashboard</span>
+               </a>
+            </li>
+            <li>
+               <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 ">
+                    <%= render_svg 'attendance' %>
+                    <span class="ms-1">Attendance</span>
+               </a>
+            </li>
+            <li>
+               <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 group">
+                    <%= render_svg 'payroll' %>
+                    <span class="ms-1">Payroll</span>
+               </a>
+            </li>
+            <li>
+                <%= link_to chitoge_employees_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+                    <%= render_svg 'users' %>
+                    <span class="ms-1">Employees</span>
+                <% end %>
+            </li>
+            <li>
+                <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+                <%= render_svg 'notification' %>
+                <span class="ms-1">Notification</span>
+                </a>
+            </li>
+            <hr>
+            <li>
+                <a href="#" id="logout-btn" form="logout-form" class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group">
+                    <%= render_svg 'logout' %>
+                    <span class="ms-1">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+
+<div id="confirmModel" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto h-full w-full flex items-center justify-center">
+    <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="blue" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                </svg>                  
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 my-6"> Are you sure want to Logout?</h3>
+          
+            <div class="flex items-center px-4 py-3 justify-center space-x-4">
+                <button id="cancelLogout" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none">
+                    Cancel
+                </button>
+                
+                <span>
+                    <form action="/logout" method="POST" id="logout-form">
+                        <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+                    </form>
+                    <button id="confirmLogout" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-red-700 focus:outline-none bg-red-500 text-white">
+                        Logout
+                    </button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>  
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+       const logoutButton = document.getElementById("logout-btn"); 
+       const confirmModel = document.getElementById("confirmModel");
+       const cancelButton = document.getElementById("cancelLogout");
+       const confirmButton = document.getElementById("confirmLogout");
+
+       if (logoutButton && confirmModel) {
+           logoutButton.addEventListener("click", (event) => {
+               event.preventDefault(); 
+               confirmModel.classList.toggle("hidden");
+           });
+       } else {
+           console.error("Element not found: Check if 'logout-btn' or 'confirmModel' IDs exist in the DOM.");
+       }
+
+       cancelButton.addEventListener("click", () => {
+           confirmModel.classList.toggle("hidden");
+       });
+
+       confirmButton.addEventListener("click", () => {
+           confirmModel.classList.toggle("hidden");
+           document.getElementById("logout-form").submit();
+       });
+    });
+</script>
