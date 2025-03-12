@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_28_080154) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_11_205950) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.integer "employee_id"
+    t.date "date"
+    t.datetime "checkin_time"
+    t.datetime "checkout_time"
+    t.decimal "hours_worked"
+    t.decimal "overtime"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
@@ -27,7 +39,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_28_080154) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-  
+
   create_table "employees", force: :cascade do |t|
     t.string "first_name", null: false
     t.string "last_name", null: false
@@ -43,14 +55,32 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_28_080154) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payrolls", force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.date "pay_date", null: false
+    t.integer "gross_pay", null: false
+    t.integer "net_pay", null: false
+    t.integer "tax_deductions", default: 0
+    t.integer "benefits_deductions", default: 0
+    t.integer "other_deductions", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
     t.string "phone_number"
     t.string "password_digest", null: false
     t.integer "company_id"
+    t.string "job_title"
+    t.date "hire_at"
+    t.integer "department_id"
+    t.integer "salary"
+    t.decimal "hourly_rate"
     t.string "role", default: "employee"
     t.datetime "last_login_at", precision: nil
+    t.datetime "date_of_birth"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

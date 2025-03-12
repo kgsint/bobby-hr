@@ -1,51 +1,142 @@
 <nav class="w-full bg-white border-b border-gray-200 drop-shadow-lg">
-    <div class="px-3 py-3 lg:px-5 lg:pl-3">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center justify-start rtl:justify-end">
-          <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
-              <span class="sr-only">Open sidebar</span>
-              <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                 <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
-              </svg>
-           </button>
-          <a href="/" class="flex ms-2 md:me-24">
-            <img src="<%= asset_path('logo') %>" class="h-8 me-3" alt="BobbyHR Logo" />
-          </a>
-        </div>
-        <div class="flex items-center">
-            <div class="flex items-center ms-3">
-              <div>
-                <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
-                  <span class="sr-only">Open user menu</span>
-                  <img class="w-8 h-8 rounded-full" src="<%= asset_path('user_icon')%>" alt="user photo">
-                </button>
-              </div>
-              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
-                <div class="px-4 py-3" role="none">
-                  <p class="text-sm text-gray-900" role="none">
-                    Neil Sims
-                  </p>
-                  <p class="text-sm font-medium text-gray-900 truncate" role="none">
-                    neil.sims@flowbite.com
-                  </p>
-                </div>
-                <ul class="py-1" role="none">
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Dashboard</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"  role="menuitem">Settings</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Earnings</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-1" role="menuitem">Sign out</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-end">
+        <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar"
+          type="button"
+          class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200">
+          <span class="sr-only">Open sidebar</span>
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+          </svg>
+        </button>
+        <a href="/" class="flex ms-2 md:me-24">
+          <img src="<%= asset_path('nav_logo') %>" class="h-8 me-3" alt="BobbyHR Logo" />
+        </a>
+      </div>
+      <div class="flex items-center">
+        <div class="flex items-center ms-3">
+          <div>
+            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+              aria-expanded="false" data-dropdown-toggle="dropdown-user">
+              <span class="sr-only">Open user menu</span>
+              <img class="w-8 h-8 rounded-full" src="<%= asset_path('user_icon') %>" alt="user photo">
+            </button>
           </div>
+          <div class="z-1000 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow"
+            id="dropdown-user">
+            <div class="px-4 py-3" role="none">
+              <% if current_user %>
+                <p class="text-sm text-gray-900" role="none">
+                  <%= current_user.name %>
+                </p>
+                <p class="text-sm font-medium text-gray-900 truncate" role="none">
+                  <%= current_user.email %>
+                </p>
+                <% end %>
+            </div>
+            <ul class="py-1" role="none">
+              <li>
+                <%= link_to "Profile" , chitoge_employee_path(current_user),
+                  class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" , role: "menuitem" %>
+              </li>
+              <li>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+              </li>
+              <li>
+                <a href="#" id="logout-btn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-1"
+                  role="menuitem">Log out</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
+
+<div id="confirmModel"
+  class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50 overflow-y-auto h-full w-full flex items-center justify-center">
+  <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="mt-3 text-center">
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="blue"
+          class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+        </svg>
+      </div>
+      <h3 class="text-lg leading-6 font-medium text-gray-900 my-6"> Are you sure want to Logout?</h3>
+
+      <div class="flex items-center px-4 py-3 justify-center space-x-4">
+        <button id="cancelLogout"
+          class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400 focus:outline-none">
+          Cancel
+        </button>
+
+        <span>
+          <form action="/logout" method="POST" id="logout-form">
+            <input type="hidden" value="<%= form_authenticity_token %>" name="authenticity_token" />
+          </form>
+          <button id="confirmLogout"
+            class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-red-700 focus:outline-none bg-red-500 text-white">
+            Logout
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #dropdown-user {
+    position: absolute;
+    min-width: 12rem;
+    top: 55%;
+    right: 0%;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userButton = document.querySelector("[data-dropdown-toggle='dropdown-user']");
+    const dropdownMenu = document.getElementById("dropdown-user");
+
+    if (userButton && dropdownMenu) {
+      userButton.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!userButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+          dropdownMenu.classList.add("hidden");
+        }
+      });
+    }
+
+    const logoutButton = document.getElementById("logout-btn");
+    const confirmModel = document.getElementById("confirmModel");
+    const cancelButton = document.getElementById("cancelLogout");
+    const confirmButton = document.getElementById("confirmLogout");
+
+    if (logoutButton && confirmModel) {
+      logoutButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        console.log(confirmModel);
+
+        confirmModel.classList.remove("hidden");
+      });
+
+      cancelButton.addEventListener("click", () => {
+        confirmModel.classList.toggle("hidden");
+      });
+
+      confirmButton.addEventListener("click", () => {
+        document.getElementById("logout-form").submit();
+      });
+    }
+  });
+</script>

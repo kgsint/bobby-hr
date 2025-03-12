@@ -1,4 +1,7 @@
 <div class="px-4 col-span-10 pt-5 w-[90%]">
+  <% if alert.present? %>
+    <p class="flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg inline-block text-center justify-center" id="alert"><%= alert %></p>
+  <% end %>
    <div class="p-4 rounded-lg">
      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
        <!-- Total Leaves -->
@@ -27,3 +30,16 @@
      </div>
    </div>
  </div>
+
+ <script>
+  setTimeout(function() {
+    var noticeElement = document.getElementById('alert');
+    if (noticeElement) {
+      noticeElement.style.opacity = '0';
+      setTimeout(function() {
+        noticeElement.style.display = 'none';
+      }, 500);
+    }
+  }, 3000);
+
+ </script>

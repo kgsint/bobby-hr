@@ -17,7 +17,17 @@ Rails.application.routes.draw do
 
 
   namespace :chitoge do
-    resources :employees
+    resources :employees do
+      resources :payrolls, only: [:index, :new, :create]
+      resources :attendances, only: [:index, :create] do
+        collection do
+          post 'check_in', to: 'attendances#check_in'
+          post 'check_out', to: 'attendances#check_out'
+        end
+      end
+    end
+     
+    resources :attendances, only: [:index]  
     resources :departments
     resources :companies
     get 'employees/index'

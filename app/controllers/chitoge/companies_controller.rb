@@ -1,6 +1,7 @@
 class Chitoge::CompaniesController < ApplicationController
   layout 'admin'
   before_action :set_company, only: %i[ show edit update destroy ]
+  before_action :require_admin
 
   # GET /companies or /companies.json
   def index
@@ -27,7 +28,7 @@ class Chitoge::CompaniesController < ApplicationController
 
     respond_to do |format|
       if @company.save
-        format.html { redirect_to chitoge_companies_path(@company), notice: "Company was successfully created." }
+        format.html { redirect_to chitoge_companies_path, notice: "Company was successfully created." }
         format.json { render :show, status: :created, location: @company }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -63,5 +64,9 @@ class Chitoge::CompaniesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def company_params
       params.require(:company).permit(:name, :code)
+    end
+
+    def require_admin
+      redirect_to root_path, alert: "You are not authorized to access this page." unless current_user.role === 'admin'
     end
 end

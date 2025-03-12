@@ -1,8 +1,8 @@
 
 <div class="grid md:grid-cols-2 bg-gray-100 shadow-md rounded-lg mx-5">
-    <div class="mx-0 bg-blue-100 invisible md:visible">
-        <h1 class="text-center">LOGO</h1>
-    </div>
+    <div class="mx-0 bg-blue-100 invisible md:visible rounded-l-lg w-full h-full flex items-center justify-center">
+        <img src="<%= asset_path('main_logo') %>" alt="BobbyHR Logo" class="w-full h-full object-contain" />
+      </div>
     <div class="col-sm-span-2 px-5 py-5">
       <h1 class="text-2xl text-center text-blue-500">Registration</h1>
       <%= form_for(@user, as: :user, url: register_path, method: :post, html: { class: "my-5" }) do |f| %>
