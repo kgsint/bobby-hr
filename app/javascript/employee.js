@@ -1,23 +1,22 @@
 setTimeout(function () {
-  var noticeElement = document.getElementById('notice');
+  let noticeElement = document.getElementById("notice");
   if (noticeElement) {
-    noticeElement.style.opacity = '0';
+    noticeElement.style.opacity = "0";
     setTimeout(function () {
-      noticeElement.style.display = 'none';
+      noticeElement.style.display = "none";
     }, 500);
   }
 }, 3000);
 
 setTimeout(function () {
-  var alertElement = document.getElementById('alert');
+  let alertElement = document.getElementById("alert");
   if (alertElement) {
-    alertElement.style.opacity = '0';
+    alertElement.style.opacity = "0";
     setTimeout(function () {
-      alertElement.style.display = 'none';
+      alertElement.style.display = "none";
     }, 500);
   }
 }, 3000);
-
 
 document.addEventListener("DOMContentLoaded", function () {
   const employeeModal = document.getElementById("employeeModal");
@@ -42,7 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   employeeModal.addEventListener("click", function (event) {
     // Check if the click target is the modal itself (background overlay)
-    if (event.target === employeeModal || event.target.classList.contains("overlay")) {
+    if (
+      event.target === employeeModal ||
+      event.target.classList.contains("overlay")
+    ) {
       closeModal();
     }
   });
@@ -55,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (event.target.closest(".action-buttons")) return;
 
       const employeeId = this.getAttribute("data-id");
-      fetch(`/chitoge/employees/${employeeId}.json`)
+      fetch(`/chitoge/employees/${employeeId}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -82,8 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
   });
-
-
 
   // Function to open the delete modal
   function openDeleteModal(employeeId) {
@@ -113,11 +113,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (employeeIdToDelete) {
       // Send a DELETE request to the server with the employee's ID
-      fetch(`/chitoge/employees/${employeeIdToDelete}`, {
+      fetch(`/employees/${employeeIdToDelete}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')
+            .content,
         },
       })
         .then((response) => {
@@ -131,7 +132,9 @@ document.addEventListener("DOMContentLoaded", function () {
           console.log(data.message);
           window.location.reload();
 
-          const employeeRow = document.querySelector(`tr[data-id="${employeeIdToDelete}"]`);
+          const employeeRow = document.querySelector(
+            `tr[data-id="${employeeIdToDelete}"]`,
+          );
           if (employeeRow) {
             employeeRow.remove();
           }
@@ -142,8 +145,4 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
   });
-
-
-
-
 });

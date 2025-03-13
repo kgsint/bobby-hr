@@ -1,26 +1,9 @@
-<div class="w-[90%]">
+<div class="w-[90%] container px-4 py-3">
   <% if notice.present? %>
-    <p class="flex py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block text-center justify-center" id="notice"><%= notice %></p>
+    <p class="flex py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg text-center justify-center" id="notice"><%= notice %></p>
   <% end %>
 
   <% content_for :title, "Companies" %>
-
-  <div class="flex container justify-between items-center my-10 mx-auto">
-    <h1 class="font-bold text-4xl">Companies & Departments</h1>
-
-    <div class="flex items-center gap-4">
-      <%= link_to new_chitoge_company_path, class: "rounded-lg py-2 px-3 bg-blue-600 hover:bg-blue-800 text-white block font-medium focus:ring-4 focus:ring-blue-300 flex items-center gap-2" do %>
-        <%= render_svg 'plus' %>
-        New Company
-      <% end %>
-
-      <%= link_to new_chitoge_department_path, class: "rounded-lg py-2 px-3 bg-blue-600 hover:bg-blue-800 text-white block font-medium focus:ring-4 focus:ring-blue-300 flex items-center gap-2" do %>
-        <%= render_svg 'plus' %>
-        New Department
-      <% end %>
-    </div>
-  
-  </div>
 
   <div id="companies" class="container mx-auto">
       <!-- Delete Confirmation Modal -->
@@ -47,7 +30,13 @@
       </div>
       <!-- End Modal -->
 
-    <p class="font-bold text-2xl">Companies</p>
+    <div class="flex items-center justify-between gap-4">
+        <p class="font-bold text-2xl">Companies</p>
+        <%= link_to new_chitoge_company_path, class: "rounded-lg py-2 px-3 bg-blue-600 hover:bg-blue-800 text-white block font-medium focus:ring-4 focus:ring-blue-300 flex items-center gap-2" do %>
+            <%= render_svg 'plus' %>
+            New Company
+        <% end %>
+    </div
     <!-- Company Table -->
     <div class="overflow-x-auto shadow-md sm:rounded-lg my-10">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-auto">
@@ -82,10 +71,12 @@
                   <%= company.code %>
                 </td>
                 <td class="flex px-6 py-4 text-center justify-center">
-                  <%= link_to "Edit", edit_chitoge_company_path(company), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none" %>
-                  <button data-id="<%= company.id %>" data-type="companies" class="delete-button focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                    Delete
-                  </button>
+                    <%= link_to "View", "/chitoge/companies/#{company.id}/departments", class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none" %>
+
+                    <%= link_to "Edit", edit_chitoge_company_path(company), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none" %>
+                    <button data-id="<%= company.id %>" data-type="companies" class="delete-button focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
+                        Delete
+                    </button>
                 </td>
               </tr>
             <% end %>
@@ -96,52 +87,6 @@
     <br>
     <!-- End Company Table -->
 
-    <p class="font-bold text-2xl">Departments</p>
-    <!-- Department Table -->
-    <div class="overflow-x-auto shadow-md sm:rounded-lg my-10">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-auto">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-              <tr>
-                  <th scope="col" class="px-6 py-3">
-                      Name
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                      Company Name
-                  </th>
-                  <th scope="col" class="px-6 py-3 text-center">
-                      Action
-                  </th>
-              </tr>
-          </thead>
-          <tbody>
-          <% if @departments.empty? %>
-            <!-- Show this row if there are no employees -->
-            <tr class="bg-white border-b">
-              <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                There is no company.
-              </td>
-            </tr>
-          <% else %>
-            <% @departments.each do |department| %>
-              <tr class="bg-white border-b">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                  <%= department.name %>
-                </th>
-                <td class="px-6 py-4">
-                  <%= department.company.name %>
-                </td>
-                <td class="flex px-6 py-4 text-center justify-center">
-                  <%= link_to "Edit", edit_chitoge_department_path(department), class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none" %>
-                  <button data-id="<%= department.id %>" data-type="departments" class="delete-button focus:outline-none text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            <% end %>
-          <% end %>
-          </tbody>
-      </table>
-    </div>
 
   </div>
   <!-- Employee Modal -->
@@ -161,9 +106,8 @@
     </div>
   </div>
   <!-- End Modal -->
-  
+
 </div>
 
 
 <%= javascript_include_tag 'company' %>
-

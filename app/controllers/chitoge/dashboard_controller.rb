@@ -1,6 +1,10 @@
-class Chitoge::DashboardController < ApplicationController
-  layout 'admin'
-  def index
-    @total_employees = Employee.count
+module Chitoge
+  class DashboardController < BaseChitogeController
+    layout 'admin'
+
+    def index
+      @total_employees = Employee.count
+    end
   end
+
 end

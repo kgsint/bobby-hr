@@ -1,4 +1,4 @@
-class Chitoge::DepartmentsController < ApplicationController
+class Chitoge::DepartmentsController < BaseChitogeController
   layout 'admin'
   before_action :set_department, only: %i[ show edit update destroy ]
   before_action :require_admin

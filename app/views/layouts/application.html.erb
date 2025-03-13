@@ -3,16 +3,26 @@
   <head>
     <title>BobbyHr</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf-token" content="<%= form_authenticity_token %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application" %>
+    <%= stylesheet_link_tag "employees" %>
+
+
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
+  <%= render :partial => "layouts/header" %>
   <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+    <main class="flex pt-0">
+        <% if current_user.ghost_admin? || current_user.company_admin?  %>
+            <%= render partial: "layouts/sidebar_chitoge" %>
+            <% elsif current_user.employee? %>
+            <%= render :partial => "layouts/sidebar_employee" %>
+        <% end %>
       <%= yield %>
     </main>
   </body>

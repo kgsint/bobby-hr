@@ -9,6 +9,8 @@ class CreateAttendances < ActiveRecord::Migration[7.1]
       t.decimal :overtime
       t.string :status
 
+      t.integer :company_id
+
       t.timestamps
     end
   end

@@ -1,8 +1,13 @@
 Rails.application.routes.draw do
+  get '/' => 'home#show', as: 'profile'
+
   root to: 'chitoge/dashboard#index'
 
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
+
+
   # for authentication
-  get 'register' => 'auth/register#new' 
+  get 'register' => 'auth/register#new'
   post 'register' => 'auth/register#create'
 
   get 'login' => 'auth/session#new'
@@ -13,10 +18,17 @@ Rails.application.routes.draw do
   get 'forget-password' => 'auth/forget_password#new'
   post 'forget-password' => 'auth/forget_password#create'
 
-  mount LetterOpenerWeb::Engine, at: "/letter_opener" 
-
+  resources :employees
 
   namespace :chitoge do
+    # authentication
+    namespace :auth do
+      get 'login' => 'session#new'
+      post 'login' => 'session#create'
+
+      post 'logout' => 'session#destroy'
+    end
+
     resources :employees do
       resources :payrolls, only: [:index, :new, :create]
       resources :attendances, only: [:index, :create] do
@@ -26,12 +38,14 @@ Rails.application.routes.draw do
         end
       end
     end
-     
-    resources :attendances, only: [:index]  
+
+    resources :attendances, only: [:index]
     resources :departments
-    resources :companies
+    resources :companies do
+      get "departments", to: "companies#departments"
+    end
     get 'employees/index'
-    
+
     get "/dashboard" => "dashboard#index"
 
   end
