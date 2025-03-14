@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_26_144450) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,6 +54,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_26_144450) do
     t.integer "department_id"
     t.integer "salary"
     t.decimal "hourly_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "leave_requests", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.date "from"
+    t.date "to"
+    t.string "leave_type"
+    t.string "status", default: "pending"
+    t.date "approved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payrolls", force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.date "pay_date", null: false
+    t.integer "gross_pay", null: false
+    t.integer "net_pay", null: false
+    t.integer "tax_deductions", default: 0
+    t.integer "benefits_deductions", default: 0
+    t.integer "other_deductions", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

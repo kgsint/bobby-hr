@@ -20,6 +20,13 @@ Rails.application.routes.draw do
 
   resources :employees
 
+  resources :leave_requests, only: [:index, :new, :create] do
+    member do
+      patch :approve
+      patch :decline
+    end
+  end
+
   namespace :chitoge do
     # authentication
     namespace :auth do

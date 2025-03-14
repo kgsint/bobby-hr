@@ -14,6 +14,12 @@
           </a>
         </li>
         <li>
+          <%= link_to new_leave_request_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+          <%= render_svg 'users' %>
+              <span class="ms-1">Leaves</span>
+          <% end %>
+      </li>
+        <li>
           <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
             <%= render_svg 'notification' %>
             <span class="ms-1">Notification</span>
