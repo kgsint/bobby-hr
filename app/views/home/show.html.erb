@@ -5,7 +5,6 @@
     <% if alert.present? %>
       <p class="flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg text-center justify-center" id="alert"><%= alert %></p>
     <% end %>
-    <h1 class="text-2xl font-bold mb-4">Profile</h1>
   <div class="grid md:gap-6 p-5">
     <div class="flex justify-start md:gap-6">
         <button id="checkin_btn">Clock-in</button>
@@ -13,27 +12,32 @@
     </div>
   </div>
 
-
-  <div class="bg-gray-100 shadow-md rounded-lg p-6 mb-6">
-    <h2 class="text-xl font-semibold mb-6 text-center bg-gray-200 py-2 rounded-lg">Details Information</h2>
-    <% if current_user.company_admin? || current_user.employee? %>
-        <div class="grid md:grid-cols-2 md:gap-6 p-5">
-            <p class="text-gray-700"><strong class="text-gray-800">Name:</strong> <%= @employee.name %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Email:</strong> <%= @employee.email %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Phone:</strong> <%= @employee.phone_number %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Job Title:</strong> <%= @employee.job_title %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Company:</strong> <%= @employee.company.name %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Department:</strong> <%= @employee.department.name %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Salary:</strong> <%= @employee.salary %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Hourly Rate:</strong> <%= @employee.hourly_rate %></p>
-            <p class="text-gray-700"><strong class="text-gray-800">Hire Date:</strong> <%= @employee.hire_at.strftime("%B %d, %Y") %></p>
-        </div>
-    <% end %>
-  </div>
-
   <div class="bg-gray-100 shadow-md rounded-lg p-6">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+       <!-- Total Leaves -->
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_leaves %></h5>
+           <p class="font-normal text-gray-700">Total Leaves</p>
+         </a>
+       </div>
+       <%# total late %>
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @attendances.where(status: 'late').size %></h5>
+           <p class="font-normal text-gray-700">Total Late</p>
+         </a>
+       </div>
+       <%# total late %>
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @attendances.sum(:hours_worked).to_i %></h5>
+           <p class="font-normal text-gray-700">Hours Worked</p>
+         </a>
+       </div>
+      </div>
     <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Attendance Records</h2>
-    <% if @attendances.present? %>
+    <% if @attendances.present? && !current_user.ghost_admin? %>
       <table class="min-w-full bg-gray-200 rounded-lg">
         <thead>
           <tr>
@@ -45,7 +49,7 @@
         <tbody>
           <% @attendances.each do |attendance| %>
             <tr class="text-center">
-              <td class="py-2 px-4 border-b"><%= attendance.created_at.strftime("%B %d, %Y") %></td>
+              <td class="py-2 px-4 border-b"><%= attendance.date.strftime("%B %d, %Y") %></td>
               <td class="py-2 px-4 border-b"><%= attendance.checkin_time.strftime("%I:%M %p") if attendance.checkin_time %></td>
               <td class="py-2 px-4 border-b"><%= attendance.checkout_time.strftime("%I:%M %p") if attendance.checkout_time %></td>
             </tr>

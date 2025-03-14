@@ -8,6 +8,8 @@ class CreateLeaveRequests < ActiveRecord::Migration[7.1]
       t.string :status, default: "pending"
       t.date :approved_at
 
+      t.integer :company_id
+
       t.timestamps
     end
   end

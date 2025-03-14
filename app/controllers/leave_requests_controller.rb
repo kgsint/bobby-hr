@@ -1,5 +1,5 @@
 class LeaveRequestsController < ApplicationController
-  layout 'admin'
+  # layout 'admin'
   before_action :set_leave_request, only: [:approve, :decline]
   before_action :admin_only, only: [:index, :update]
 
@@ -22,8 +22,9 @@ class LeaveRequestsController < ApplicationController
 
   # POST /leave_requests or /leave_requests.json
   def create
-    @leave_request = current_user.leave_requests.build(leave_request_params)
-    if @leave_request.save
+    @leave_request = LeaveRequest.new(leave_request_params)
+    @leave_request.employee_id = Employee.find_by(email: current_user.email).id
+    if @leave_request.save!
       redirect_to root_path, notice: "Leave request submitted successfully."
     else
       render :new, alert: "Failed to submit leave request."

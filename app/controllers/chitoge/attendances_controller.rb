@@ -123,6 +123,7 @@ module Chitoge
 
 
     def check_out
+      byebug
       attendance = Attendance.find_by(employee_id: current_employee.id, date: Date.today)
 
       if attendance.nil?

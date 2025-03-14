@@ -4,6 +4,10 @@ class HomeController < ApplicationController
   end
 
   def show
-    @employee = Employee.find_by(email: current_user.email)
+    if current_user.company_admin? || current_user.employee?
+      @employee = Employee.find_by(email: current_user.email)
+      @total_leaves = @employee.leave_requests.where.not(approved_at: nil).count
+      @attendances = @employee.attendances
+    end
   end
 end

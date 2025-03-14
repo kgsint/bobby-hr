@@ -2,9 +2,9 @@
     <div class="h-full px-3 pb-4 overflow-y-auto bg-grey-500">
       <ul class="space-y-2 font-medium ms-3 mt-5">
         <li>
-          <%= link_to '/attendance', class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+          <%= link_to '/', class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
                <%= render_svg 'attendance' %>
-               <span class="ms-1">Attendance</span>
+               <span class="ms-1">Home</span>
           <% end %>
         </li>
         <li>
@@ -16,15 +16,9 @@
         <li>
           <%= link_to new_leave_request_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
           <%= render_svg 'users' %>
-              <span class="ms-1">Leaves</span>
+              <span class="ms-1">Req Leave</span>
           <% end %>
       </li>
-        <li>
-          <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group">
-            <%= render_svg 'notification' %>
-            <span class="ms-1">Notification</span>
-          </a>
-        </li>
       </ul>
     </div>
   </aside>

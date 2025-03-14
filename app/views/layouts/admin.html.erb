@@ -17,7 +17,11 @@
   <%= render :partial => "layouts/header" %>
   <body>
     <main class="flex pt-0">
-      <%= render :partial => "layouts/sidebar_chitoge" %>
+      <% if current_user.ghost_admin? || current_user.company_admin? %>
+        <%= render :partial => "layouts/sidebar_chitoge" %>
+      <% elsif current_user.employee? %>
+        <%= render :partial => "layouts/sidebar_employee" %>
+      <% end %>
       <%= yield %>
     </main>
   </body>

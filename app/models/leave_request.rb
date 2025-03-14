@@ -1,5 +1,5 @@
 class LeaveRequest < ApplicationRecord
-  belongs_to :employee, class_name: "User"
+  belongs_to :employee
 
   validates :from, :to, :leave_type, presence: true
   validates :status, inclusion: { in: %w[pending approved declined] }, allow_nil: true
