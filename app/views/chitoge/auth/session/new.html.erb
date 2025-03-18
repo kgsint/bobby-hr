@@ -1,0 +1,39 @@
+<div class="max-w-4xl grid md:grid-cols-2 bg-gray-100 shadow-md rounded-lg">
+  <div class="mx-0 bg-blue-100 invisible md:visible rounded-l-lg w-full h-full flex items-center justify-center">
+    <img src="<%= asset_path('main_logo') %>" alt="BobbyHR Logo" class="w-full h-full object-contain" />
+  </div>
+  <div class="col-sm-span-2">
+    <h1 class="text-2xl text-center text-blue-500 mt-5">Log In</h1>
+    <%= form_with url: :chitoge_auth_login, method: :post, html: { class: "px-5 py-12" } do |f| %>
+        <%# email address %>
+        <div class="relative z-0 w-full mb-5 group">
+            <%= f.email_field :email, class: "form_input peer", id: "email", required: true, placeholder: " ", value: flash[:old_email]  %>
+            <%= f.label :email_address, for: "email", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% unless flash[:error].nil? %>
+                <p class="text-red-500 text-sm mt-2"><%= flash[:error] %></p>
+            <% end %>
+        </div>
+        <%# password %>
+        <div class="relative z-0 w-full mb-5 group">
+            <%= f.password_field :password, class: "form_input peer", id: "password", required: true, placeholder: " " %>
+            <%= f.label :password, for: "password", class: "form_label peer-focus:font-medium  peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+        </div>
+
+        <div>
+            <%= f.submit "Login", class: "text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center mt-5" %>
+        </div>
+
+        <%# remember me and forget password %>
+        <div class="flex items-start mb-5 mt-5">
+          <div class="flex items-center h-5">
+              <%= f.check_box "", class: "w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 cursor-pointer", id: "remember_me" %>
+              <%= f.label "Remember me", for: "remember_me", class: "ms-2 text-sm font-medium text-gray-500 cursor-pointer" %>
+          </div>
+        </div>
+
+        <div class="flex items-start mb-5 text-blue-500 underline">
+            <%= link_to "Forgot password?", forget_password_path, class: "text-sm" %>
+        </div>
+    <% end %>
+  </div>
+</div>

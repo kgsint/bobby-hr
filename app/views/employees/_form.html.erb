@@ -1,0 +1,111 @@
+<%= form_with(model: @employee, class: "contents") do |f| %>
+  <% if @employee.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(@employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+      <ul>
+        <% @employee.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid md:grid-cols bg-gray-100 shadow-md rounded-lg mx-auto mt-10">
+    <div class="col-sm-span-2 px-5 py-5">
+      <h1 class="text-2xl text-center text-blue-500 mb-10">Employees Registration</h1>
+
+        <div class="grid md:grid-cols-2 md:gap-6">
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :name, class: "form_input peer", id: "name", placeholder: " ", required: true %>
+            <%= f.label :name, for: "first_name", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:name].any? %>
+                <p class="text-sm text-red-500">Name <%= @employee.errors[:name].first %></p>
+            <% end %>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :email, class: "form_input peer", id: "email", placeholder: " ", required: true %>
+            <%= f.label :email, for: "email", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:email].any? %>
+                <p class="text-sm text-red-500">Email<%= @employee.errors[:email].first %></p>
+            <% end %>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 md:gap-6">
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :phone_number, class: "form_input peer", id: "phone_number", placeholder: " ", required: true, maxlength: 11, pattern: "[0-9]*", inputmode: "numeric", oninput: "this.value = this.value.replace(/[^0-9]/g, '')" %>
+            <%= f.label :phone_number, for: "phone_number", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:phone_number].any? %>
+                <p class="text-sm text-red-500">PhoneNumber <%= @employee.errors[:phone_number].first %></p>
+            <% end %>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.password_field :password, class: "form_input peer", id: "password", placeholder: " " %>
+            <%= f.label :password, for: "password", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:password].any? %>
+                <p class="text-sm text-red-500">Password <%= @employee.errors[:password].first %></p>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 md:gap-6">
+            <div class="relative z-0 w-full mb-5 group">
+                <%= f.text_field :job_title, class: "form_input peer", id: "job_title", placeholder: " ", required: true %>
+                <%= f.label :job_title, for: "job_title", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+                <% if @employee.errors[:job_title].any? %>
+                    <p class="text-sm text-red-500">Job Title<%= @employee.errors[:job_title].first %></p>
+                <% end %>
+            </div>
+
+            <div class="relative z-0 w-full mb-5 group">
+                <%= f.collection_select :department_id, Department.with_current_company, :id, :name, { prompt: "Select a Department" }, { class: "form_input peer", id: "company_id", required: true } %>
+                <%= f.label :department_id, for: "department_at", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+                <% if @employee.errors[:department_id].any? %>
+                    <p class="text-sm text-red-500">Department At<%= @employee.errors[:department_id].first %></p>
+                <% end %>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 md:gap-6">
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.date_field :date_of_birth, class: "form_input peer", id: "date_of_birth", placeholder: " ", required: true %>
+            <%= f.label :date_of_birth, for: "hire_at", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:date_of_birth].any? %>
+                <p class="text-sm text-red-500">Date of birth<%= @employee.errors[:date_of_birth].first %></p>
+            <% end %>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.date_field :hire_at, class: "form_input peer", id: "hire_at", placeholder: " ", required: true %>
+            <%= f.label :hire_at, for: "hire_at", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:hire_at].any? %>
+                <p class="text-sm text-red-500">Hire At <%= @employee.errors[:hire_at].first %></p>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 md:gap-6">
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :hourly_rate, class: "form_input peer", id: "hourly_rate", placeholder: " ", required: true %>
+            <%= f.label :hourly_rate, for: "hourly_rate", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:hourly_rate].any? %>
+                <p class="text-sm text-red-500">Date of birth<%= @employee.errors[:hourly_rate].first %></p>
+            <% end %>
+          </div>
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :salary, class: "form_input peer", id: "salary", placeholder: " ", required: true %>
+            <%= f.label :salary, for: "salary", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @employee.errors[:salary].any? %>
+                <p class="text-sm text-red-500">Hire At <%= @employee.errors[:salary].first %></p>
+            <% end %>
+          </div>
+        </div>
+
+          <%# submit button %>
+         <div class="flex justify-end mt-10">
+         <div>
+           <%= link_to "Back to employees", employees_path, class: "text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-3 text-center" %>
+           <%= f.submit class: "text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" %>
+         </div>
+        </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,45 @@
+<div class="px-4 col-span-10 pt-5 w-[90%]">
+  <% if alert.present? %>
+    <p class="flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg text-center justify-center" id="alert"><%= alert %></p>
+  <% end %>
+   <div class="p-4 rounded-lg">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+       <!-- Total Leaves -->
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">12</h5>
+           <p class="font-normal text-gray-700">Total Leaves</p>
+         </a>
+       </div>
+
+       <!-- Total Employees -->
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_employees %></h5>
+           <p class="font-normal text-gray-700">Total Employees</p>
+         </a>
+       </div>
+
+       <!-- Total Late -->
+       <div>
+         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">12</h5>
+           <p class="font-normal text-gray-700">Total Late</p>
+         </a>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <script>
+  setTimeout(function() {
+    var noticeElement = document.getElementById('alert');
+    if (noticeElement) {
+      noticeElement.style.opacity = '0';
+      setTimeout(function() {
+        noticeElement.style.display = 'none';
+      }, 500);
+    }
+  }, 3000);
+
+ </script>

@@ -1,0 +1,242 @@
+<div class="bg-gray-100 min-h-screen flex w-full">
+  <div class="p-4 w-full">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4 flex items-center justify-between">
+      <div class="flex items-center">
+        <!-- <button class="ml-4 text-gray-500 hover:text-gray-700">
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607m0 0v3.75m-3.75 0H21" />
+          </svg>
+        </button> -->
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <%= link_to 'Day', chitoge_attendances_path(view: 'day'), class: "px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 #{params[:view] != 'week' && params[:view] != 'month' ? 'bg-gray-100 text-gray-900' : ''}" %>
+        <%= link_to 'Week', chitoge_attendances_path(view: 'week'), class: "px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 #{params[:view] == 'week' ? 'bg-gray-100 text-gray-900' : ''}" %>
+        <%#<%= link_to 'Month', chitoge_attendances_path(view: 'month'), class: "px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 #{params[:view] == 'month' ? 'bg-gray-100 text-gray-900' : ''}" %>
+
+        <%= button_tag type: :button, class: "px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100", id: 'prev-date' do %>
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline-block align-middle">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        <% end %>
+
+        <button class="px-3 py-2 rounded-md text-sm font-medium text-gray-900 bg-gray-100" id='today-date'>
+          <%= @current_date.strftime('%B %d, %Y') %>
+        </button>
+
+        <%= button_tag type: :button, class: "px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100", id: 'next-date' do %>
+          <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 inline-block align-middle">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Attendance Table -->
+    <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Employee
+            </th>
+            <% if params[:view] == 'week' %>
+                <% @dates_in_week.each do |date| %>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <%= date.strftime('%a %d') %>
+                    </th>
+                <% end %>
+            <% elsif params[:view] == 'month' %>
+                <% @dates_in_month.each_slice(7).with_index do |week_dates, week_index| %>
+                    <% week_dates.each do |date| %>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <%= date.strftime('%a %d') %>
+                        </th>
+                    <% end %>
+                    <% break %> <%# Display only first week for brevity in header, consider full month header if needed %>
+                <% end %>
+            <% else %>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Clock-in
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Clock-out
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Hours
+                </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            <% if params[:view] == 'week' %>
+                <% @employee_attendances_week.each do |emp_data| %>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <%= emp_data[:employee].name %>
+                                </div>
+                            </div>
+                        </td>
+                        <% emp_data[:attendances].each_with_index do |attendance, index| %>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <% if attendance %>
+                                    <div class="text-sm text-gray-500">
+                                        Status:
+                                        <% case attendance.status %>
+                                            <% when "on_time" %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">On time</span>
+                                            <% when "late" %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Late</span>
+                                            <% else %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">N/A</span>
+                                        <% end %>
+                                        <br>
+                                        Clock-in: <%= attendance.checkin_time&.strftime("%I:%M %p") || '-' %>
+                                        <br>
+                                        Clock-out: <%= attendance.checkout_time&.strftime("%I:%M %p") || '-' %>
+                                        <br>
+                                        Hours: <%= attendance.hours_worked || '0' %>
+                                    </div>
+                                <% else %>
+                                    <span class="text-sm text-gray-500">N/A</span>
+                                <% end %>
+                            </td>
+                        <% end %>
+                    </tr>
+                <% end %>
+            <% elsif params[:view] == 'month' %>
+                <% @employee_attendances_month.each do |emp_data| %>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <%= emp_data[:employee].name %>
+                                </div>
+                            </div>
+                        </td>
+                        <% @dates_in_month.each do |date| %>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <% attendance = emp_data[:attendances].find { |att| att&.date == date } %>
+                                <% if attendance %>
+                                    <div class="text-sm text-gray-500">
+                                        Status:
+                                        <% case attendance.status %>
+                                            <% when "on_time" %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">On time</span>
+                                            <% when "late" %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Late</span>
+                                            <% else %>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">N/A</span>
+                                        <% end %>
+                                        <br>
+                                        Clock-in: <%= attendance.checkin_time&.strftime("%I:%M %p") || '-' %>
+                                        <br>
+                                        Clock-out: <%= attendance.checkout_time&.strftime("%I:%M %p") || '-' %>
+                                        <br>
+                                        Hours: <%= attendance.hours_worked || '0' %>
+                                    </div>
+                                <% else %>
+                                    <span class="text-sm text-gray-500">N/A</span>
+                                <% end %>
+                            </td>
+                        <% end %>
+                    </tr>
+                <% end %>
+
+            <% else # Day view %>
+                <% Employee.with_current_company.each do |employee| %>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-gray-900">
+                                    <%= employee.name %>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <% case employee.attendance_by_date(@current_date)&.status %>
+                            <% when "on_time" %>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    On time
+                                </span>
+                            <% when "late" %>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Late
+                                </span>
+                            <% else %>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                N/A
+                            </span>
+                            <% end %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <%= employee.attendance_by_date(@current_date)&.checkin_time&.strftime("%I:%M %p") || '-' %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <%= employee.attendance_by_date(@current_date)&.checkout_time&.strftime("%I:%M %p") || '-' %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <%= employee.attendance_by_date(@current_date)&.hours_worked || '0' %>
+                        </td>
+                    </tr>
+                <% end %>
+            <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const prevDateButton = document.getElementById('prev-date');
+        const nextDateButton = document.getElementById('next-date');
+        const todayDateButton = document.getElementById('today-date');
+
+        const currentUrl = new URL(window.location.href);
+        let currentDate = new Date('<%= @current_date.to_s %>');
+        let view = '<%= params[:view] || 'day' %>';
+
+        prevDateButton.addEventListener('click', function() {
+            let newDate;
+            if (view === 'week') {
+                newDate = new Date(currentDate.setDate(currentDate.getDate() - 7));
+            } else if (view === 'month') {
+                newDate = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+            }
+            else { // day view
+                newDate = new Date(currentDate.setDate(currentDate.getDate() - 1));
+            }
+            updateUrl(newDate);
+        });
+
+        nextDateButton.addEventListener('click', function() {
+            let newDate;
+            if (view === 'week') {
+                newDate = new Date(currentDate.setDate(currentDate.getDate() + 7));
+            } else if (view === 'month') {
+                newDate = new Date(currentDate.setMonth(currentDate.getMonth() + 1));
+            }
+            else { // day view
+                newDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+            }
+            updateUrl(newDate);
+        });
+
+        todayDateButton.addEventListener('click', function() {
+            updateUrl(new Date());
+        });
+
+        function updateUrl(date) {
+            const dateString = date.toISOString().slice(0, 10);
+            currentUrl.searchParams.set('date', dateString);
+            window.location.href = currentUrl.href;
+        }
+    });
+</script>

@@ -10,7 +10,66 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_15_040002) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "attendances", force: :cascade do |t|
+    t.integer "employee_id"
+    t.date "date"
+    t.datetime "checkin_time"
+    t.datetime "checkout_time"
+    t.decimal "hours_worked"
+    t.decimal "overtime"
+    t.string "status"
+    t.integer "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.time "default_start_time"
+    t.integer "late_grace_period_minutes"
+    t.string "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
+    t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "employees", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "phone_number"
+    t.string "job_title"
+    t.date "date_of_birth"
+    t.integer "company_id"
+    t.date "hire_at"
+    t.integer "department_id"
+    t.integer "salary"
+    t.decimal "hourly_rate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "leave_requests", force: :cascade do |t|
+    t.bigint "employee_id"
+    t.date "from"
+    t.date "to"
+    t.string "leave_type"
+    t.string "status", default: "pending"
+    t.date "approved_at"
+    t.integer "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -19,7 +78,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_15_040002) do
     t.integer "company_id"
     t.string "role", default: "employee"
     t.datetime "last_login_at", precision: nil
-    t.datetime "date_of_bith"
+    t.datetime "date_of_birth"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

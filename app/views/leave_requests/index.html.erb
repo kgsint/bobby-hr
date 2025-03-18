@@ -1,0 +1,51 @@
+<div class="w-[90%]">
+  <% if notice.present? %>
+    <p class="flex py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block text-center justify-center" id="notice"><%= notice %></p>
+  <% end %>
+
+  <% content_for :title, "Employees" %>
+  
+  <h1 class="text-2xl font-bold text-center text-gray-800 mb-6 mt-5">Leave Requests</h1>
+  <div class="overflow-x-auto shadow-md sm:rounded-lg container mx-auto mt-10">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-auto">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+        <tr>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Employee</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">From</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">To</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Type</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Status</th>
+          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <% @leave_requests.each do |leave_request| %>
+          <tr class="hover:bg-gray-50 transition">
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.employee.name %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.from %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.to %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.leave_type %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+              <span class="px-2 py-1 rounded text-xs font-semibold 
+                <%= leave_request.status == 'approved' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' %>">
+                <%= leave_request.status.capitalize %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap flex justify-center space-x-4 text-center">
+              <%= form_with url: approve_leave_request_path(leave_request), method: :patch do |form| %>
+                <%= form.submit "Approve", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
+              <% end %>
+            
+              <%= form_with url: decline_leave_request_path(leave_request), method: :patch do |form| %>
+                <%= form.submit "Decline", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+

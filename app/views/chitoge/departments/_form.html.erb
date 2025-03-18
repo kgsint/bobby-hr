@@ -1,0 +1,47 @@
+<%= form_with(model: [:chitoge, @department], class: "contents") do |f| %>
+  <% if @department.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(department.errors.count, "error") %> prohibited this department from being saved:</h2>
+
+      <ul>
+        <% @department.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid md:grid-cols bg-gray-100 shadow-md rounded-lg mx-auto mt-10">
+    <div class="col-sm-span-2 px-5 py-5">
+      <h1 class="text-2xl text-center text-blue-500 mb-10">Departments Registration</h1>
+  
+        <div class="grid md:grid-cols-2 md:gap-6">
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.text_field :name, class: "form_input peer", id: "name", placeholder: " ", required: true %>
+            <%= f.label :name, for: "name", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @department.errors[:name].any? %>
+                <p class="text-sm text-red-500">Name <%= @department.errors[:name].first %></p>
+            <% end %>
+          </div>
+
+          <div class="relative z-0 w-full mb-5 group">
+            <%= f.collection_select :company_id, Company.all, :id, :name, { prompt: "Select a Company" }, { class: "form_input peer", id: "company_id", required: true } %>
+            <%= f.label :company_id, for: "company_id", class: "form_label peer-focus:font-medium peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6" %>
+            <% if @department.errors[:company_id].any? %>
+              <p class="text-sm text-red-500">Company ID<%= @department.errors[:company_id].first %></p>
+            <% end %>
+          </div>
+        </div>
+
+
+          <%# submit button %>
+         <div class="flex justify-end mt-10">
+         <div>
+           <%= link_to "Back", chitoge_companies_path, class: "text-black bg-gray-300 hover:bg-gray-400 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-3 text-center" %>
+           <%= f.submit class: "text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center" %>
+         </div>
+        </div>
+
+    </div>
+  </div>
+<% end %>

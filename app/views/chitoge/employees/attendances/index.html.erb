@@ -1,0 +1,75 @@
+<div class="w-[90%]">
+
+    <!-- Page Title -->
+    <h1 class="text-2xl font-bold flex items-center space-x-2 bg-gray-200 p-4 rounded-md">
+      <%= link_to chitoge_employees_path, class: "flex items-center space-x-1 hover:text-blue-500" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+      <% end %>
+  
+      <span class="text-center w-full">
+        Attendance for <%= @employee.name %>
+      </span>
+    </h1>
+  
+    <div class="container mx-auto p-6 bg-white shadow-md rounded-lg">
+      <!-- Month Navigation -->
+      <div class="flex justify-between items-center mb-4">
+        <%= link_to "◀ Previous Month", chitoge_employee_attendances_path(@employee, month: @month.prev_month), class: "px-4 py-2 bg-blue-500 rounded-md text-white" %>
+        <h2 class="text-xl font-semibold"><%= @month.strftime("%B %Y") %></h2>
+        <%= link_to "Next Month ▶", chitoge_employee_attendances_path(@employee, month: @month.next_month), class: "px-4 py-2 bg-blue-500 rounded-md text-white" %>
+      </div>
+  
+      <!-- Calendar Table with Pagination -->
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2">Date</th>
+            <th class="border border-gray-300 px-4 py-2">Check-in Time</th>
+            <th class="border border-gray-300 px-4 py-2">Check-out Time</th>
+            <th class="border border-gray-300 px-4 py-2">Hours Worked</th>
+            <th class="border border-gray-300 px-4 py-2">Overtime</th>
+            <th class="border border-gray-300 px-4 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @days.each do |day| %>
+            <% attendance = @attendances.find_by(date: day) %>
+            <tr class="<%= day.saturday? || day.sunday? ? 'bg-gray-200' : 'bg-white' %>">
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= day.strftime("%d %b, %A") %></td>
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= attendance&.checkin_time&.in_time_zone(Time.zone)&.strftime("%I:%M %p") || "-" %></td>
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= attendance&.checkout_time&.in_time_zone(Time.zone)&.strftime("%I:%M %p") || "-" %></td>
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= hours_and_minutes(attendance&.hours_worked) %></td>
+              <td class="border border-gray-300 px-4 py-2 text-center"><%= attendance&.overtime || "0" %> hrs</td>
+              <td class="border border-gray-300 px-4 py-2 text-center">
+                <% if attendance %>
+                  <span class="px-2 py-1 rounded-full text-white <%= attendance.status == 'checked_in' ? 'bg-green-500' : 'bg-red-500' %>">
+                    <%= attendance.status == 'checked_in' ? 'Present' : 'Absent' %>
+                  </span>
+                <% else %>
+                  <span class="text-gray-500">-</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  
+  </div>
+  
+  
+  <!-- Pagination Controls -->
+  <div class="mt-5 mb-5 flex justify-center items-center space-x-4">
+    <% if @current_page > 1 %>
+      <%= link_to "« Previous", chitoge_employee_attendances_path(@employee, month: @month, page: @current_page - 1), class: "px-4 py-2 bg-blue-500 hover:bg-gray-600 text-white rounded-md" %>
+    <% end %>
+
+    <% (1..@total_pages).each do |page| %>
+      <%= link_to page, chitoge_employee_attendances_path(@employee, month: @month, page: page), class: "px-4 py-2 rounded-md text-white #{'bg-blue-700' if page == @current_page} bg-blue-500" %>
+    <% end %>
+
+    <% if @current_page < @total_pages %>
+      <%= link_to "Next »", chitoge_employee_attendances_path(@employee, month: @month, page: @current_page + 1), class: "px-4 py-2 bg-blue-500 hover:bg-gray-600 text-white rounded-md" %>
+    <% end %>
+  </div>

@@ -1,0 +1,28 @@
+<div class="mx-auto md:w-2/3 w-full">
+  <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Submit Leave Request</h1>
+
+  <%= form_with model: @leave_request, local: true do |form| %>
+    <!-- Start Date Field -->
+    <div class="mb-4">
+      <%= form.label :from, "Start Date", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.date_field :from, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+
+    <!-- End Date Field -->
+    <div class="mb-4">
+      <%= form.label :to, "End Date", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.date_field :to, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+
+    <!-- Leave Type Dropdown -->
+    <div class="mb-4">
+      <%= form.label :leave_type, "Leave Type", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= form.select :leave_type, options_for_select(["Casual", "Sick Leave", "Other"]), {}, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-center">
+      <%= form.submit "Submit Leave Request", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  <% end %>
+</div>
