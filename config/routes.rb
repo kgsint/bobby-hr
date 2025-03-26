@@ -36,7 +36,11 @@ Rails.application.routes.draw do
       post 'logout' => 'session#destroy'
     end
 
-    resources :payrolls, only: [:index, :new, :create, :show]
+    resources :payrolls, only: [:index, :new, :create, :show] do
+      collection do
+        post 'bulk_create' => 'payrolls'
+      end
+    end
     resources :employees do
       resources :attendances, only: [:index, :create] do
         collection do

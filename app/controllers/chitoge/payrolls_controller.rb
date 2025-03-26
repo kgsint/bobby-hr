@@ -4,12 +4,13 @@ class Chitoge::PayrollsController < ApplicationController
 
   # GET /payrolls or /payrolls.json
   def index
-    # @employees = Employee.includes(:payrolls).all 
+    @employees = Employee.includes(:payrolls).all 
     @payrolls = Payroll.all
   end
 
   # GET /payrolls/1 or /payrolls/1.json
   def show
+    @employee = current_employee
     @payroll = Payroll.find(params[:id])
   end
 
@@ -33,12 +34,40 @@ class Chitoge::PayrollsController < ApplicationController
     employee = Employee.find(params[:employee_id])
     pay_date = Date.today.end_of_month
     payroll_service = PayrollService.new(employee, pay_date)
-    payroll_service.generate_payroll
-
-    redirect_to chitoge_payrolls_path, notice: "Payroll generated successfully."
+    
+    result = payroll_service.generate_payroll
+    
+    if result == employee.payrolls.find_by(pay_date: pay_date.beginning_of_month..pay_date.end_of_month)
+      alert = "Payroll already existed for #{employee.name} (#{pay_date.strftime('%B %Y')})"
+      redirect_to chitoge_payrolls_path, alert: alert
+    else
+      notice = "Successfully generated new payroll for #{employee.name} (#{pay_date.strftime('%B %Y')})"
+      redirect_to chitoge_payrolls_path, notice: notice
+    end
+  
   rescue ActiveRecord::RecordNotFound
     redirect_to new_chitoge_payroll_path, alert: "Employee not found."
+  rescue => e
+    redirect_to new_chitoge_payroll_path, alert: "Payroll generation failed: #{e.message}"
   end
+
+  def bulk_create
+    pay_date = parse_pay_date(params[:pay_date])
+    
+    employees = Employee.with_current_company 
+    generated_count = 0
+    skipped_count = 0
+  
+    employees.find_each do |employee|
+      payroll = PayrollService.new(employee, pay_date).generate_payroll
+      payroll.persisted? ? generated_count += 1 : skipped_count += 1
+    end
+   
+    redirect_to chitoge_payrolls_path,  notice: "Generated payrolls, skipped #{skipped_count} duplicates"
+  rescue => e
+    redirect_to new_chitoge_payroll_path, alert: "Error: #{e.message}"
+  end
+  
   # def create
   #   employee = Employee.find(params[:employee_id])
   #   pay_date = params[:pay_date].to_date
@@ -93,5 +122,11 @@ class Chitoge::PayrollsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def payroll_params
       params.require(:payroll).permit(:employee_id, :pay_date, :gross_pay, :net_pay, :tax_deductions, :benefits_deductions, :other_deductions)
+    end
+
+    def parse_pay_date(date_string)
+      date_string.present? ? Date.parse(date_string) : Date.current
+    rescue Date::Error
+      Date.current
     end
 end

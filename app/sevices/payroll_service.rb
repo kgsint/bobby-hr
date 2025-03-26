@@ -14,6 +14,11 @@ class PayrollService
     raise ArgumentError, "Employee is required" unless @employee
     raise ArgumentError, "Pay date is required" unless @pay_date
 
+    if payroll_exists_for_month?
+      Rails.logger.warn "Payroll already exists for #{@employee.name} in #{@pay_date.strftime('%B %Y')}"
+      return find_existing_payroll
+    end
+
     gross_pay = calculate_gross_pay
     deductions = calculate_deductions(gross_pay)
     net_pay = gross_pay - deductions.values.sum
@@ -34,11 +39,22 @@ class PayrollService
 
   private
 
+  def payroll_exists_for_month?
+    Payroll.where(employee_id: @employee.id)
+           .where("date_trunc('month', pay_date) = ?", @pay_date.beginning_of_month)
+           .exists?
+  end
+
+  def find_existing_payroll
+    Payroll.find_by(
+      employee_id: @employee.id,
+      pay_date: @pay_date.beginning_of_month..@pay_date.end_of_month
+    )
+  end
+
   def calculate_gross_pay
     if @employee.salary.present?
       @employee.salary
-    else
-      calculate_hourly_pay
     end
   end
 
@@ -46,6 +62,13 @@ class PayrollService
     hours_worked = calculate_hours_worked
     raise "Hourly rate not set for employee" unless @employee.hourly_rate.present?
     @employee.hourly_rate * hours_worked
+  end
+
+  def has_late_attendances?
+    @employee.attendances
+             .where(date: @pay_date.beginning_of_month..@pay_date.end_of_month)
+             .where(status: 'late')
+             .exists?
   end
 
   def calculate_hours_worked
@@ -62,19 +85,16 @@ class PayrollService
     {
       tax: gross_pay * @tax_rate,
       benefits: gross_pay * @benefits_rate,
-      other: calculate_other_deductions
+      other: has_late_attendances? ? calculate_late_deductions : 0
     }
   end
 
-  def calculate_other_deductions
-    # Fetch all late attendances for the month
+  def calculate_late_deductions
     late_attendances = @employee.attendances
                                 .where(
                                   date: @pay_date.beginning_of_month..@pay_date.end_of_month,
-                                  status: 'late'  # Check for 'late' status
+                                  status: 'late'
                                 )
-    
-    # Calculate total penalty: ₹500 per late attendance
     late_attendances.count * LATE_PENALTY_PER_DAY
   end
 end

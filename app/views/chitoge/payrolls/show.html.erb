@@ -1,35 +1,85 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-4">Payslip for <%= @payroll.employee.name %></h1>
-  <div class="bg-white p-6 rounded-lg shadow-md">
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <p class="font-semibold">Pay Date:</p>
-        <p><%= @payroll.pay_date %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Employee Name:</p>
-        <p><%= @payroll.employee.name %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Gross Pay:</p>
-        <p><%= number_to_currency(@payroll.gross_pay) %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Tax Deductions:</p>
-        <p><%= number_to_currency(@payroll.tax_deductions) %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Benefits Deductions:</p>
-        <p><%= number_to_currency(@payroll.benefits_deductions) %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Other Deductions:</p>
-        <p><%= number_to_currency(@payroll.other_deductions) %></p>
-      </div>
-      <div>
-        <p class="font-semibold">Net Pay:</p>
-        <p><%= number_to_currency(@payroll.net_pay) %></p>
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <div class="no-print flex justify-between items-center mb-6">
+    <%= link_to "Back", :back, class: "flex items-center text-blue-600 hover:text-blue-800 font-medium" %>
+  </div>
+
+  <div class="payslip-container bg-white rounded-lg shadow-lg overflow-hidden border border-gray-100">
+    <h1 class="text-3xl font-bold text-gray-800 text-center mt-5 mb-5">Payslip Statement</h1>
+
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
+      <h2 class="text-xl font-semibold text-white">Salary Payment</h2>
+      <p class="text-blue-100 text-sm"><%= @payroll.pay_date.strftime("%B %Y") %></p>
+    </div>
+
+    <div class="p-6 border-b border-gray-200">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <p class="text-sm font-medium text-gray-500">Employee Name</p>
+          <p class="text-lg font-semibold"><%= @payroll.employee.name %></p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Employee ID</p>
+          <p class="text-lg"><%= @payroll.employee.id %></p>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500">Pay Date</p>
+          <p class="text-lg"><%= @payroll.pay_date.strftime("%d %B %Y") %></p>
+        </div>
       </div>
     </div>
+
+    <div class="p-6 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Earnings</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <p class="text-sm font-medium text-gray-600">Basic Salary</p>
+          <p class="text-xl font-bold text-blue-700"><%= number_to_currency(@payroll.gross_pay) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 border-b border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Deductions</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-red-50 p-4 rounded-lg">
+          <p class="text-sm font-medium text-gray-600">Tax</p>
+          <p class="text-lg font-semibold text-red-600"><%= number_to_currency(@payroll.tax_deductions) %></p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <p class="text-sm font-medium text-gray-600">Benefits</p>
+          <p class="text-lg font-semibold text-purple-600"><%= number_to_currency(@payroll.benefits_deductions) %></p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg">
+          <p class="text-sm font-medium text-gray-600">Other</p>
+          <p class="text-lg font-semibold text-yellow-600"><%= number_to_currency(@payroll.other_deductions) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 bg-gray-50">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Total Deductions</p>
+          <p class="text-lg"><%= number_to_currency(@payroll.tax_deductions + @payroll.benefits_deductions + @payroll.other_deductions) %></p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-medium text-gray-600">Net Pay</p>
+          <p class="text-2xl font-bold text-green-600"><%= number_to_currency(@payroll.net_pay) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-6 py-3 bg-gray-100 text-center text-xs text-gray-500">
+      This is an official payslip document. Generated on <%= Time.current.strftime("%d %B %Y at %H:%M") %>
+    </div>
+  </div>
+
+  <div class="no-print mt-6 flex justify-end">
+    <button data-action="click->print#print" onclick="window.print()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+      Print Payslip
+    </button>
   </div>
 </div>
