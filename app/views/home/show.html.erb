@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-8 mt-5">
+<div class="container mx-auto px-4">
   <% if notice.present? %>
       <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
     <% end %>
@@ -6,39 +6,86 @@
       <p class="flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg text-center justify-center" id="alert"><%= alert %></p>
     <% end %>
   <div class="grid md:gap-6 p-5">
-    <div class="flex justify-start md:gap-6">
-        <button id="checkin_btn">Clock-in</button>
-        <button id="checkout_btn">Clock-out</button>
+    <div class="flex justify-end md:gap-6">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" id="checkin_btn">Clock-in</button>
+      <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" id="checkout_btn">Clock-out</button>
     </div>
   </div>
 
-  <div class="bg-gray-100 shadow-md rounded-lg p-6">
-     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-       <!-- Total Leaves -->
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_leaves %></h5>
-           <p class="font-normal text-gray-700">Total Leaves</p>
-         </a>
-       </div>
-       <%# total late %>
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @attendances.where(status: 'late').size %></h5>
-           <p class="font-normal text-gray-700">Total Late</p>
-         </a>
-       </div>
-       <%# total late %>
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @attendances.sum(:hours_worked).to_i %></h5>
-           <p class="font-normal text-gray-700">Hours Worked</p>
-         </a>
-       </div>
+  <div class="rounded-lg p-0 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> 
+      <!-- Leaves Summary Card -->
+      <div class="shadow-lg">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+          <div class="flex justify-between h-full">
+            <!-- Total Leaves -->
+            <div class="text-center">
+              <%= render_svg 'clock' %>
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_leaves %></h5>
+              <p class="font-normal text-gray-700">Total Leaves</p>
+            </div>
+    
+            <!-- Approved Leaves -->
+            <div class="text-center">
+              <%= render_svg 'check' %>
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @approved_leaves %></h5>
+              <p class="font-normal text-gray-700">Approved Leaves</p>
+            </div>
+    
+            <!-- Declined Leaves -->
+            <div class="text-center">
+              <%= render_svg 'cross' %>
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @declined_leaves %></h5>
+              <p class="font-normal text-gray-700">Declined Leaves</p>
+            </div>
+    
+            <!-- Pending Leaves -->
+            <div class="text-center">
+              <%= render_svg 'color_clock' %>
+              <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @pending_leaves %></h5>
+              <p class="font-normal text-gray-700">Pending Leaves</p>
+            </div>
+          </div>
+        </a>
       </div>
-    <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Attendance Records</h2>
+    
+      <!-- Total Late Card -->
+      <div class="shadow-lg">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+          <div class="h-full flex flex-col items-center justify-center gap-4">
+            <!-- Icon -->
+            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <!-- Number -->
+            <h5 class="text-2xl font-bold tracking-tight text-gray-900"><%= @attendances&.where(status: 'late')&.size || 0 %></h5>
+            <!-- Label -->
+            <p class="font-normal text-gray-700">Total Late</p>
+          </div>
+        </a>
+      </div>
+    
+      <!-- Hours Worked Card -->
+      <div class="shadow-lg">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+          <div class="h-full flex flex-col justify-center items-center gap-4">
+            <!-- Icon -->
+            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <!-- Number -->
+            <h5 class="text-2xl font-bold tracking-tight text-gray-900"><%= @attendances&.sum(:hours_worked).to_i || 0 %></h5>
+            <!-- Label -->
+            <p class="font-normal text-gray-700">Hours Worked</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    </div>
+
+    <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg mt-6">Attendance Records</h2>
     <% if @attendances.present? && !current_user.ghost_admin? %>
-      <table class="min-w-full bg-gray-200 rounded-lg">
+      <table class="min-w-full bg-white rounded-lg mb-6 shadow-md">
         <thead>
           <tr>
             <th class="py-2 px-4 border-b">Date</th>
@@ -59,29 +106,157 @@
     <% else %>
       <p class="text-gray-600 text-center">No attendance records found.</p>
     <% end %>
+
+    <hr>
+    <br>
+
+    <!-- Leave Status and History Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- Latest Leave Request Status Card -->
+      <div class="mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Latest Leave Request Status (Recently)</h2>
+        <% if @latest_leave_request.present? %>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <span class="flex justify-between">
+              <p class="text-gray-700"><strong>Status:</strong> 
+                <% case @latest_leave_request.status %>
+                  <% when "approved" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><%= @latest_leave_request.status %></span>
+                  <% when "pending" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><%= @latest_leave_request.status %></span>
+                  <% else %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"><%= @latest_leave_request.status %></span>
+                <% end %>
+              </p>
+              <p class="text-gray-700"><strong>Requested Date:</strong>
+                <%= @latest_leave_request.created_at.strftime("%B %d, %Y") %>
+              </p>
+            </span>
+            <p class="text-gray-700"><strong>Start Date:</strong> <%= @latest_leave_request.from.strftime("%B %d, %Y") %></p>
+            <p class="text-gray-700"><strong>End Date:</strong> <%= @latest_leave_request.to.strftime("%B %d, %Y") %></p>
+            <p class="text-gray-700"><strong>Reason:</strong> <%= @latest_leave_request.leave_type %></p>
+          </div>
+        <% else %>
+          <p class="text-gray-600 text-center">No leave requests for today.</p>
+        <% end %>
+      </div>
+
+      <!-- Leave History -->
+      <div>
+        <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Leave History (<%= @total_leaves %>)</h2>
+        <% if @leave_requests.present? %>
+          <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- Add a container with a fixed height and overflow-y-auto -->
+            <div class="max-h-60 overflow-y-auto scrollable-table"> <!-- Adjust max-h-60 as needed -->
+              <table class="min-w-full">
+                <thead>
+                  <tr class="sticky-header top-0 bg-gray-200"> <!-- Make header sticky -->
+                    <th class="py-2 px-4 border-b">Start Date</th>
+                    <th class="py-2 px-4 border-b">End Date</th>
+                    <th class="py-2 px-4 border-b">Reason</th>
+                    <th class="py-2 px-4 border-b">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @leave_requests.each do |leave| %>
+                    <tr class="text-center">
+                      <td class="py-2 px-4 border-b"><%= leave.from.strftime("%B %d, %Y") %></td>
+                      <td class="py-2 px-4 border-b"><%= leave.to.strftime("%B %d, %Y") %></td>
+                      <td class="py-2 px-4 border-b"><%= leave.leave_type %></td>
+                      <td class="py-2 px-4 border-b">
+                        <% case leave.status %>
+                          <% when "approved" %>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><%= leave.status %></span>
+                          <% when "pending" %>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><%= leave.status %></span>
+                          <% else %>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"><%= leave.status %></span>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        <% else %>
+          <p class="text-gray-600 text-center">No leave history found.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Attendance Records -->
+    
   </div>
 </div>
+
+<style>
+.scrollable-table {
+  max-height: 15rem; 
+  overflow-y: auto;
+}
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: #f3f4f6; 
+  z-index: 10;
+}
+</style>
 
 <script defer type="text/javascript">
   let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
+  function handleResponse(response) {
+    if (response.ok) {
+      window.location.reload();
+    } else {
+      response.json().then(data => {
+        if (data.alert) {
+          alert(data.alert); 
+        }
+      });
+    }
+  }
+
+  // function displayNotice(message, type) {
+  //   const noticeElement = document.createElement('p');
+  //   noticeElement.className = type === 'notice' ? 'py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block' : 'flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg text-center justify-center';
+  //   noticeElement.id = type === 'notice' ? 'notice' : 'alert';
+  //   noticeElement.textContent = message;
+
+  //   const container = document.querySelector('.container');
+  //   container.insertBefore(noticeElement, container.firstChild);
+
+  //   setTimeout(() => {
+  //     noticeElement.remove();
+  //   }, 3000);
+  // }
+
   document.querySelector('#checkin_btn').addEventListener('click', function() {
-      fetch( "<%= check_in_chitoge_employee_attendances_path(current_user.id) %>", {
-        method: "POST",
-        headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
-              },
-      })
+    fetch("<%= check_in_chitoge_employee_attendances_path(current_user.id) %>", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+    })
+    .then(handleResponse)
+    .catch(error => {
+      console.error('Error:', error);
+    });
   });
 
-  document.querySelector('#checkout_btn').addEventListener('click', function() {
-      fetch( "<%= check_out_chitoge_employee_attendances_path(current_user.id) %>", {
-        method: "POST",
-        headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
-              },
-      })
+    document.querySelector('#checkout_btn').addEventListener('click', function() {
+    fetch("<%= check_out_chitoge_employee_attendances_path(current_user.id) %>", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken
+      },
+    })
+    .then(handleResponse)
+    .catch(error => {
+      console.error('Error:', error);
+    });
   });
 </script>

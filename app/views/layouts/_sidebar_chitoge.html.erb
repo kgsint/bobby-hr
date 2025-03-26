@@ -21,6 +21,12 @@
                 <% end %>
             </li>
             <li>
+                <%= link_to chitoge_payrolls_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
+                    <%= render_svg 'payroll' %>
+                    <span class="ms-1">Payroll</span>
+                <% end %>
+            </li>
+            <li>
                 <%= link_to leave_requests_path, class: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group" do %>
                 <%= render_svg 'users' %>
                     <span class="ms-1">Leaves</span>

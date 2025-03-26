@@ -104,9 +104,9 @@ module Chitoge
 
     def check_in
       current_date = Date.current
-      existing_attendance = Attendance.find_by(employee_id: current_employee.id, date: current_date)
-
+      existing_attendance = Attendance.find_by(employee_id: current_employee.id, date: current_date) 
       if existing_attendance
+        # render json: { alert: "You've already checked in today." }
         flash[:alert] = "You've already checked in today."
       else
         Attendance.create!(
@@ -116,34 +116,31 @@ module Chitoge
           status: "checked_in"
         )
         flash[:notice] = "Checked in at #{Time.current.strftime('%H:%M')}"
+        # render json: { notice: "Checked in at #{attendance.checkin_time.strftime('%H:%M')}" }
       end
-
-      redirect_back(fallback_location: root_path)
     end
-
 
     def check_out
       byebug
       attendance = Attendance.find_by(employee_id: current_employee.id, date: Date.today)
-
+    
       if attendance.nil?
         flash[:alert] = "You must check in before checking out."
+        # render json: { alert: "You must check in before checking out." }
       elsif attendance.checkout_time.present?
         flash[:alert] = "You've already checked out."
+        # render json: { alert: "You've already checked out." }
       else
         checkin_time = attendance.checkin_time
         checkout_time = Time.current
         total_hours = ((checkout_time - checkin_time) / 3600).round(2)
-
-
+    
         attendance.update!(
-          checkout_time: Time.current,
+          checkout_time: checkout_time,
           hours_worked: total_hours
         )
         flash[:notice] = "Checked out at #{checkout_time.strftime('%H:%M')}. Total hours worked: #{total_hours} hours."
       end
-
-      redirect_back(fallback_location: root_path)
     end
 
     private

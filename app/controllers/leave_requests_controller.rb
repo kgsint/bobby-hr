@@ -14,6 +14,7 @@ class LeaveRequestsController < ApplicationController
 
   # GET /leave_requests/new
   def new
+    @employee = current_employee
     @leave_request = current_user.leave_requests.build
   end
   # GET /leave_requests/1/edit

@@ -7,7 +7,7 @@ module Chitoge
     end
 
     def show
-      byebug
+      # byebug
       @employee = Employee.find_by(id: params[:id])
       if @employee
         @attendances = @employee.attendances.order(created_at: :desc) # Fetch attendance records
@@ -40,7 +40,7 @@ module Chitoge
       )
 
       if @user.save! && @employee.save
-        redirect_to employees_path, notice: 'Employee was successfully created.'
+        redirect_to chitoge_employees_path, notice: 'Employee was successfully created.'
       else
         render :new
       end
@@ -74,13 +74,13 @@ module Chitoge
         @user.date_of_birth = employee_params[:date_of_birth].present? ? employee_params[:date_of_birth] : @user.date_of_birth
 
         if @employee.update!(employee_params.except(:password)) && @user.save!
-          redirect_to employees_path, notice: 'Employee was successfully updated.'
+          redirect_to chitoge_employees_path, notice: 'Employee was successfully updated.'
         else
           render :edit
         end
       else
         flash[:alert] = "Employee not found."
-        redirect_to employees_path
+        redirect_to chitoge_employees_path
       end
     end
 

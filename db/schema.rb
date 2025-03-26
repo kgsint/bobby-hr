@@ -70,6 +70,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payrolls", force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.date "pay_date", null: false
+    t.integer "gross_pay", null: false
+    t.integer "net_pay", null: false
+    t.integer "tax_deductions", default: 0
+    t.integer "benefits_deductions", default: 0
+    t.integer "other_deductions", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false

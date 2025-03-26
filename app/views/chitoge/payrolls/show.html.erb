@@ -1,0 +1,35 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4">Payslip for <%= @payroll.employee.name %></h1>
+  <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="font-semibold">Pay Date:</p>
+        <p><%= @payroll.pay_date %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Employee Name:</p>
+        <p><%= @payroll.employee.name %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Gross Pay:</p>
+        <p><%= number_to_currency(@payroll.gross_pay) %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Tax Deductions:</p>
+        <p><%= number_to_currency(@payroll.tax_deductions) %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Benefits Deductions:</p>
+        <p><%= number_to_currency(@payroll.benefits_deductions) %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Other Deductions:</p>
+        <p><%= number_to_currency(@payroll.other_deductions) %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Net Pay:</p>
+        <p><%= number_to_currency(@payroll.net_pay) %></p>
+      </div>
+    </div>
+  </div>
+</div>

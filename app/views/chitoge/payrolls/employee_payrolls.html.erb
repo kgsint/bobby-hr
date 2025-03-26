@@ -1,0 +1,59 @@
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-800">
+        Payroll History for <%= @employee.name %>
+      </h1>
+      <%#= link_to "Back to Profile", chitoge_employee_path(@employee), class: "rounded-lg px-5 py-2.5 bg-gray-600 text-white block font-medium" %>
+    </div>
+  
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg mt-5">
+      <table class="min-w-full">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Pay Date</th>
+            <!-- <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Gross Pay</th> -->
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Net Pay</th>
+            <!-- <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Tax</th> -->
+            <!-- <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Benefits</th> -->
+            <!-- <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Other Deductions</th> -->
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Details</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% if @payrolls.empty? %>
+            <tr class="bg-white border-b">
+              <td colspan="7" class="px-6 py-4 text-center text-gray-500 text-center">
+                No payroll records found
+              </td>
+            </tr>
+          <% else %>
+            <% @payrolls.each do |payroll| %>
+              <tr class="hover:bg-gray-50 transition">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                  <%= payroll.pay_date.strftime("%B %Y") %>
+                </td>
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <%= number_to_currency(payroll.gross_pay) %>
+                </td> -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                  <%= number_to_currency(payroll.net_pay) %>
+                </td>
+                <!-- <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <%= number_to_currency(payroll.tax_deductions) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <%= number_to_currency(payroll.benefits_deductions) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  <%= number_to_currency(payroll.other_deductions) %>
+                </td> -->
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
+                  <%= link_to "View", chitoge_payroll_path(@employee), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full" %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>

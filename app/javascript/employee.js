@@ -52,38 +52,38 @@ document.addEventListener("DOMContentLoaded", function () {
   closeModalButton.addEventListener("click", closeModal);
 
   // Handle row clicks to load employee details
-  document.querySelectorAll("tr[data-id]").forEach((row) => {
-    row.addEventListener("click", function (event) {
-      if (event.target.closest(".action-buttons")) return;
+  // document.querySelectorAll("tr[data-id]").forEach((row) => {
+  //   row.addEventListener("click", function (event) {
+  //     if (event.target.closest(".action-buttons")) return;
 
-      const employeeId = this.getAttribute("data-id");
-      fetch(`/chitoge/employees/${employeeId}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          const modalContent = document.getElementById("modalContent");
-          modalContent.innerHTML = `
-            <p class="mb-2"><strong class="text-gray-700">Name:</strong> ${data.name}</p>
-            <p class="mb-2"><strong class="text-gray-700">Email:</strong> ${data.email}</p>
-            <p class="mb-2"><strong class="text-gray-700">Phone:</strong> ${data.phone_number}</p>
-            <p class="mb-2"><strong class="text-gray-700">Job Title:</strong> ${data.job_title}</p>
-            <p class="mb-2"><strong class="text-gray-700">Hire Date:</strong> ${new Date(data.hire_at).toLocaleDateString()}</p>
-            <p class="mb-2"><strong class="text-gray-700">Department ID:</strong> ${data.department_id}</p>
-            <p class="mb-2"><strong class="text-gray-700">Salary:</strong> $${data.salary}</p>
-            <p class="mb-2"><strong class="text-gray-700">Hourly Rate:</strong> $${data.hourly_rate}</p>
-          `;
-          openModal();
-        })
-        .catch((error) => {
-          console.error("Error fetching employee details:", error);
-          alert("Failed to load employee details. Please try again.");
-        });
-    });
-  });
+  //     const employeeId = this.getAttribute("data-id");
+  //     fetch(`/chitoge/employee/${employeeId}`)
+  //       .then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error(`HTTP error! Status: ${response.status}`);
+  //         }
+  //         return response.json();
+  //       })
+  //       .then((data) => {
+  //         const modalContent = document.getElementById("modalContent");
+  //         modalContent.innerHTML = `
+  //           <p class="mb-2"><strong class="text-gray-700">Name:</strong> ${data.name}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Email:</strong> ${data.email}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Phone:</strong> ${data.phone_number}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Job Title:</strong> ${data.job_title}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Hire Date:</strong> ${new Date(data.hire_at).toLocaleDateString()}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Department ID:</strong> ${data.department_id}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Salary:</strong> $${data.salary}</p>
+  //           <p class="mb-2"><strong class="text-gray-700">Hourly Rate:</strong> $${data.hourly_rate}</p>
+  //         `;
+  //         openModal();
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching employee details:", error);
+  //         alert("Failed to load employee details. Please try again.");
+  //       });
+  //   });
+  // });
 
   // Function to open the delete modal
   function openDeleteModal(employeeId) {
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (employeeIdToDelete) {
       // Send a DELETE request to the server with the employee's ID
-      fetch(`/employees/${employeeIdToDelete}`, {
+      fetch(`/chitoge/employees/${employeeIdToDelete}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
