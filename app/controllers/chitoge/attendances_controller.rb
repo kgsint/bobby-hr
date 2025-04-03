@@ -112,7 +112,7 @@ module Chitoge
         Attendance.create!(
           employee_id: current_employee.id,
           date: Date.current,
-          checkin_time: Time.current,
+          checkin_time: Time.current.strftime('%H:%M'),
           status: "checked_in"
         )
         flash[:notice] = "Checked in at #{Time.current.strftime('%H:%M')}"
@@ -121,7 +121,6 @@ module Chitoge
     end
 
     def check_out
-      byebug
       attendance = Attendance.find_by(employee_id: current_employee.id, date: Date.today)
     
       if attendance.nil?

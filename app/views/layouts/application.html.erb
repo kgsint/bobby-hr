@@ -16,14 +16,18 @@
   </head>
 
   <%= render :partial => "layouts/header" %>
-  <body>
-    <main class="flex pt-0">
+  <body class="h-screen overflow-hidden flex flex-col">
+    <main class="flex flex-1 overflow-hidden">
         <% if current_user.ghost_admin? || current_user.company_admin?  %>
             <%= render partial: "layouts/sidebar_chitoge" %>
             <% elsif current_user.employee? %>
             <%= render :partial => "layouts/sidebar_employee" %>
         <% end %>
-      <%= yield %>
+      <div class="flex-1 overflow-y-auto w-full">
+        <div class="max-w-full p-4">
+          <%= yield %>
+        </div>
+      </div>
     </main>
   </body>
 </html>

@@ -26,6 +26,8 @@ gem "jbuilder"
 
 gem 'letter_opener_web', '~> 2.0'
 
+gem 'groupdate'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

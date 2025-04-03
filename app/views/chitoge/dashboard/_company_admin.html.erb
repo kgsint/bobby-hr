@@ -1,45 +1,232 @@
-<div class="px-4 col-span-10 pt-5 w-[90%]">
-  <% if alert.present? %>
-    <p class="flex py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg text-center justify-center" id="alert"><%= alert %></p>
-  <% end %>
-   <div class="p-4 rounded-lg">
-     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-       <!-- Total Leaves -->
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_leaves_count %></h5>
-           <p class="font-normal text-gray-700">Total Leaves</p>
-         </a>
-       </div>
+<div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 gap-2">
+    <!-- Left Column -->
+    <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow border">
+      <h3 class="text-lg font-semibold mb-4">Leave Utilization This Month</h3>
+      <div class="chart-container">
+        <canvas id="leaveTrendChart"></canvas>
+      </div>
 
-       <!-- Total Employees -->
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_employees %></h5>
-           <p class="font-normal text-gray-700">Total Employees</p>
-         </a>
-       </div>
+    </div>
 
-       <!-- Total Late -->
-       <div>
-         <a href="#" class="block max-w p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
-           <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_late %></h5>
-           <p class="font-normal text-gray-700">Total Late</p>
-         </a>
-       </div>
-     </div>
-   </div>
- </div>
+    <!-- Right Column -->
+    <div class="bg-white p-4 rounded-lg shadow border">
+      <h3 class="text-lg font-semibold mb-4">Department Distribution</h3>
+      <div class="chart-container chart-container-sm">
+        <canvas id="departmentChart"></canvas>
+      </div>
+    </div>
 
- <script>
-  setTimeout(function() {
-    var noticeElement = document.getElementById('alert');
-    if (noticeElement) {
-      noticeElement.style.opacity = '0';
-      setTimeout(function() {
-        noticeElement.style.display = 'none';
-      }, 500);
+    <div class="bg-white p-4 rounded-lg shadow border">
+      <h3 class="text-lg font-semibold mb-4">Leave Balance Health</h3>
+      <div class="chart-container chart-container-sm">
+        <canvas id="leaveBalanceChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Secondary Charts Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 gap-2">
+    <!-- Late Arrivals by Department -->
+    <%= render 'shared/chart',
+      title: 'Late Arrivals by Department',
+      id: 'lateByDepartmentChart',
+      type: 'pie',
+      data: {
+        labels: @late_by_department.keys,
+        datasets: [{
+          data: @late_by_department.values,
+          backgroundColor: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right', 
+            align: 'center',   
+            labels: {
+              boxWidth: 12,    
+              padding: 10     
+            }
+          },
+        },
+      }
+    %>
+
+    <div class="lg:col-span-1 bg-white p-4 rounded-lg shadow border">
+      <h3 class="text-lg font-semibold mb-4">Pending Approvals (<%= @pending_leave_requests.count %>)</h3>
+      <div class="space-y-3">
+        <% if @pending_leave_requests.any? %>
+          <% @pending_leave_requests.each do |request| %>
+            <div class="flex items-center justify-between p-2 hover:bg-gray-50">
+              <div>
+                <p class="font-medium"><%= request.employee.name %></p>
+                <p class="text-sm text-gray-600">
+                  <%= request.leave_type.titleize %> • 
+                  <%= request.from %> to <%= request.to %>
+                </p>
+              </div>
+              <%= link_to "Review", leave_requests_path(request), class: "text-blue-600 hover:underline" %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center text-gray-500 py-4">
+            <p>No pending leave requests at this time.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- 4. Bottom Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Pending Leave Requests -->
+    
+
+    <!-- Recent Payroll Activity -->
+    <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow border">
+      <h3 class="text-lg font-semibold mb-4">Recent Payroll Deductions</h3>
+      <canvas id="payrollDeductionsChart" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chart-container {
+    height: 300px;
+    width: 100%;
+  }
+  
+  .chart-container-sm {
+    height: 250px;
+  }
+</style>
+
+<!-- Chart Scripts -->
+<%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/chart.js' %>
+
+<script>
+  // Fix for the Leave Trend Chart
+  new Chart(document.getElementById('leaveTrendChart'), {
+    type: 'bar',
+    data: {
+      labels: <%= raw (1..Date.today.day).map { |d| "#{Date.today.month}/#{d}" }.to_json %>,
+      datasets: [
+        {
+          label: 'Casual Leave',
+          data: <%= raw (1..Date.today.day).map { |d| 
+            LeaveRequest.where(leave_type: 'Casual')
+                      .where("EXTRACT(DAY FROM \"from\") <= ? AND EXTRACT(DAY FROM \"to\") >= ?", d, d)
+                      .count 
+          }.to_json %>,
+          backgroundColor: 'rgba(59, 130, 246, 0.7)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Sick Leave',
+          data: <%= raw (1..Date.today.day).map { |d| 
+            LeaveRequest.where(leave_type: 'Sick')
+                      .where("EXTRACT(DAY FROM \"from\") <= ? AND EXTRACT(DAY FROM \"to\") >= ?", d, d)
+                      .count 
+          }.to_json %>,
+          backgroundColor: 'rgba(16, 185, 129, 0.7)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          stacked: false, // For grouped bars
+          grid: {
+            display: false
+          }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            precision: 0
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false
+        }
+      }
     }
-  }, 3000);
+  });
 
- </script>
+
+
+  new Chart(document.getElementById('departmentChart'), {
+  type: 'doughnut', // Use 'doughnut' for a chart with an inner hole
+  data: {
+    labels: <%= raw Department.joins(:employees).group(:name).count.keys.to_json %>, // Department names
+    datasets: [{
+      data: <%= raw Department.joins(:employees).group(:name).count.values.to_json %>, // Employee counts per department
+      backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444'] // Colors for each segment
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'right', // Move the legend to the right side
+        align: 'center',   // Align the legend vertically in the center
+        labels: {
+          boxWidth: 12,    // Adjust the size of the color box in the legend
+          padding: 10      // Add padding between legend items
+        }
+      },
+      tooltip: {
+        enabled: true,     // Enable tooltips for hover information
+        callbacks: {
+          label: function(tooltipItem) {
+            const department = tooltipItem.label;
+            const count = tooltipItem.raw;
+            return `${department}: ${count} employees`;
+          }
+        }
+      }
+    },
+    cutout: '50%' // Customize the inner radius (creates a hole in the center)
+  }
+});
+
+  new Chart(document.getElementById('leaveBalanceChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Healthy (>5)', 'Low (1-5)', 'Critical (0)', 'Negative'],
+      datasets: [{
+        data: [
+          <%= Employee.where("casual_leave_balance > 5 AND sick_leave_balance > 5").count %>,
+          <%= Employee.where("(casual_leave_balance BETWEEN 1 AND 5) OR (sick_leave_balance BETWEEN 1 AND 5)").count %>,
+          <%= Employee.where("casual_leave_balance = 0 OR sick_leave_balance = 0").count %>,
+          <%= Employee.where("casual_leave_balance < 0 OR sick_leave_balance < 0").count %>
+        ],
+        backgroundColor: ['#10B981', '#F59E0B', '#EF4444', '#7F1D1D']
+      }]
+    },
+    options: { indexAxis: 'y' }
+  });
+
+
+  
+</script>

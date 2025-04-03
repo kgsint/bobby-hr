@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_03_084651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,6 +56,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
     t.decimal "hourly_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "casual_leave_balance", default: 12, null: false
+    t.integer "sick_leave_balance", default: 10, null: false
+    t.integer "annual_leave_balance", default: 15, null: false
+    t.integer "excess_casual_leave"
+    t.integer "excess_sick_leave"
   end
 
   create_table "leave_requests", force: :cascade do |t|
@@ -65,6 +70,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
     t.string "leave_type"
     t.string "status", default: "pending"
     t.date "approved_at"
+    t.string "reason"
     t.integer "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -76,7 +82,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_13_135354) do
     t.integer "gross_pay", null: false
     t.integer "net_pay", null: false
     t.integer "tax_deductions", default: 0
-    t.integer "benefits_deductions", default: 0
+    t.integer "leave_deductions", default: 0
     t.integer "other_deductions", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

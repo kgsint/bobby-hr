@@ -18,28 +18,24 @@
       <div class="shadow-lg">
         <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
           <div class="flex justify-between h-full">
-            <!-- Total Leaves -->
             <div class="text-center">
               <%= render_svg 'clock' %>
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @total_leaves %></h5>
               <p class="font-normal text-gray-700">Total Leaves</p>
             </div>
     
-            <!-- Approved Leaves -->
             <div class="text-center">
               <%= render_svg 'check' %>
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @approved_leaves %></h5>
               <p class="font-normal text-gray-700">Approved Leaves</p>
             </div>
     
-            <!-- Declined Leaves -->
             <div class="text-center">
               <%= render_svg 'cross' %>
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @declined_leaves %></h5>
               <p class="font-normal text-gray-700">Declined Leaves</p>
             </div>
     
-            <!-- Pending Leaves -->
             <div class="text-center">
               <%= render_svg 'color_clock' %>
               <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900"><%= @pending_leaves %></h5>
@@ -53,14 +49,13 @@
       <div class="shadow-lg">
         <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
           <div class="h-full flex flex-col items-center justify-center gap-4">
-            <!-- Icon -->
-            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <!-- Number -->
+            <span class="flex items-center gap-4">
+              <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <p class="font-bold text-gray-700">Total Late</p>
+            </span>
             <h5 class="text-2xl font-bold tracking-tight text-gray-900"><%= @attendances&.where(status: 'late')&.size || 0 %></h5>
-            <!-- Label -->
-            <p class="font-normal text-gray-700">Total Late</p>
           </div>
         </a>
       </div>
@@ -70,48 +65,62 @@
         <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
           <div class="h-full flex flex-col justify-center items-center gap-4">
             <!-- Icon -->
-            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <!-- Number -->
-            <h5 class="text-2xl font-bold tracking-tight text-gray-900"><%= @attendances&.sum(:hours_worked).to_i || 0 %></h5>
+            <span class="flex items-center gap-4">
+              <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <p class="font-bold text-gray-700">Leave Left</p>
+            </span>
+
+            <div>
+              <span class="text-sm">Casual Leave:</span>
+              <span class="font-semibold <%= @employee.casual_leave_balance.negative? ? 'text-red-600' : 'text-green-600' %>">
+                <%= @employee.casual_leave_balance %>
+              </span>
+            </div>
+            <div>
+              <span class="text-sm">Sick Leave:</span>
+              <span class="font-semibold <%= @employee.sick_leave_balance.negative? ? 'text-red-600' : 'text-green-600' %>">
+                <%= @employee.sick_leave_balance %>
+              </span>
+            </div>
             <!-- Label -->
-            <p class="font-normal text-gray-700">Hours Worked</p>
           </div>
         </a>
       </div>
     </div>
     </div>
 
-    <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg mt-6">Attendance Records</h2>
-    <% if @attendances.present? && !current_user.ghost_admin? %>
-      <table class="min-w-full bg-white rounded-lg mb-6 shadow-md">
-        <thead>
-          <tr>
-            <th class="py-2 px-4 border-b">Date</th>
-            <th class="py-2 px-4 border-b">Check-In</th>
-            <th class="py-2 px-4 border-b">Check-Out</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @attendances.each do |attendance| %>
-            <tr class="text-center">
-              <td class="py-2 px-4 border-b"><%= attendance.date.strftime("%B %d, %Y") %></td>
-              <td class="py-2 px-4 border-b"><%= attendance.checkin_time.strftime("%I:%M %p") if attendance.checkin_time %></td>
-              <td class="py-2 px-4 border-b"><%= attendance.checkout_time.strftime("%I:%M %p") if attendance.checkout_time %></td>
+    <div class="bg-gray-100 p-5 rounded-lg">
+      <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Attendance Records</h2>
+      <% if @attendances.present? && !current_user.ghost_admin? %>
+        <table class="min-w-full bg-white rounded-lg mb-6 shadow-md">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b">Date</th>
+              <th class="py-2 px-4 border-b">Check-In</th>
+              <th class="py-2 px-4 border-b">Check-Out</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p class="text-gray-600 text-center">No attendance records found.</p>
-    <% end %>
+          </thead>
+          <tbody>
+            <% @attendances.each do |attendance| %>
+              <tr class="text-center">
+                <td class="py-2 px-4 border-b"><%= attendance.date.strftime("%B %d, %Y") %></td>
+                <td class="py-2 px-4 border-b"><%= attendance.checkin_time.strftime("%I:%M %p") if attendance.checkin_time %></td>
+                <td class="py-2 px-4 border-b"><%= attendance.checkout_time.strftime("%I:%M %p") if attendance.checkout_time %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-gray-600 text-center">No attendance records found.</p>
+      <% end %>
+    </div>
 
-    <hr>
     <br>
 
     <!-- Leave Status and History Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-gray-100 p-5 rounded-lg">
       <!-- Latest Leave Request Status Card -->
       <div class="mb-6">
         <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Latest Leave Request Status (Recently)</h2>
@@ -146,11 +155,10 @@
         <h2 class="text-xl font-semibold mb-4 text-center bg-gray-200 py-2 rounded-lg">Leave History (<%= @total_leaves %>)</h2>
         <% if @leave_requests.present? %>
           <div class="bg-white p-6 rounded-lg shadow-md">
-            <!-- Add a container with a fixed height and overflow-y-auto -->
-            <div class="max-h-60 overflow-y-auto scrollable-table"> <!-- Adjust max-h-60 as needed -->
+            <div class="max-h-60 overflow-y-auto scrollable-table"> 
               <table class="min-w-full">
                 <thead>
-                  <tr class="sticky-header top-0 bg-gray-200"> <!-- Make header sticky -->
+                  <tr class="sticky-header top-0 bg-gray-200"> 
                     <th class="py-2 px-4 border-b">Start Date</th>
                     <th class="py-2 px-4 border-b">End Date</th>
                     <th class="py-2 px-4 border-b">Reason</th>

@@ -23,7 +23,7 @@
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Gross Pay</th>
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Net Pay</th>
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Tax Deductions</th>
-          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Benefits Deductions</th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Leave Deductions</th>
           <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase">Other Deductions</th>
         </tr>
       </thead>
@@ -39,10 +39,10 @@
           <tr class="hover:bg-gray-50 transition">
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= payroll.employee.name %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= payroll.pay_date %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.gross_pay) %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.net_pay) %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-bold"><%= number_to_currency(payroll.gross_pay) %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-bold"><%= number_to_currency(payroll.net_pay) %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.tax_deductions) %></td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.benefits_deductions) %></td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.leave_deductions) %></td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"><%= number_to_currency(payroll.other_deductions) %></td>
           </tr>
         <% end %>

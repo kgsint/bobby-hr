@@ -6,7 +6,7 @@ class CreatePayrolls < ActiveRecord::Migration[7.1]
       t.integer :gross_pay, null: false
       t.integer :net_pay, null: false
       t.integer :tax_deductions, default: 0
-      t.integer :benefits_deductions, default: 0
+      t.integer :leave_deductions, default: 0
       t.integer :other_deductions, default: 0
 
       t.timestamps

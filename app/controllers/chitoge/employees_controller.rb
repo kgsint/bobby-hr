@@ -7,8 +7,9 @@ module Chitoge
     end
 
     def show
-      # byebug
+      # @leaves = LeaveRequest.all
       @employee = Employee.find_by(id: params[:id])
+      @leaves = @employee.leave_requests.order(created_at: :desc)
       if @employee
         @attendances = @employee.attendances.order(created_at: :desc) # Fetch attendance records
         respond_to do |format|

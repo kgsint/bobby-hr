@@ -32,23 +32,29 @@ class Chitoge::PayrollsController < ApplicationController
   # POST /payrolls or /payrolls.json
   def create
     employee = Employee.find(params[:employee_id])
-    pay_date = Date.today.end_of_month
-    payroll_service = PayrollService.new(employee, pay_date)
-    
-    result = payroll_service.generate_payroll
-    
-    if result == employee.payrolls.find_by(pay_date: pay_date.beginning_of_month..pay_date.end_of_month)
-      alert = "Payroll already existed for #{employee.name} (#{pay_date.strftime('%B %Y')})"
-      redirect_to chitoge_payrolls_path, alert: alert
-    else
-      notice = "Successfully generated new payroll for #{employee.name} (#{pay_date.strftime('%B %Y')})"
-      redirect_to chitoge_payrolls_path, notice: notice
+    pay_date = Date.current.end_of_month
+  
+    existing_payroll = employee.payrolls
+                             .where('pay_date BETWEEN ? AND ?', 
+                                   pay_date.beginning_of_month,
+                                   pay_date.end_of_month)
+                             .first
+  
+    if existing_payroll
+      redirect_to chitoge_payrolls_path, 
+                  alert: "Payroll already exists for #{employee.name} (#{pay_date.strftime('%B %Y')})"
+      return
     end
   
+    # Only generate if no existing payroll
+    payroll = PayrollService.new(employee, pay_date).generate_payroll
+    redirect_to chitoge_payrolls_path,
+                notice: "Successfully generated payroll for #{employee.name} (#{pay_date.strftime('%B %Y')})"
+  
   rescue ActiveRecord::RecordNotFound
-    redirect_to new_chitoge_payroll_path, alert: "Employee not found."
+    redirect_to chitoge_payrolls_path, alert: "Employee not found"
   rescue => e
-    redirect_to new_chitoge_payroll_path, alert: "Payroll generation failed: #{e.message}"
+    redirect_to chitoge_payrolls_path, alert: "Payroll generation failed: #{e.message}"
   end
 
   def bulk_create
@@ -65,7 +71,7 @@ class Chitoge::PayrollsController < ApplicationController
    
     redirect_to chitoge_payrolls_path,  notice: "Generated payrolls, skipped #{skipped_count} duplicates"
   rescue => e
-    redirect_to new_chitoge_payroll_path, alert: "Error: #{e.message}"
+    redirect_to chitoge_payrolls_path, alert: "Error: #{e.message}"
   end
   
   # def create
@@ -121,7 +127,7 @@ class Chitoge::PayrollsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def payroll_params
-      params.require(:payroll).permit(:employee_id, :pay_date, :gross_pay, :net_pay, :tax_deductions, :benefits_deductions, :other_deductions)
+      params.require(:payroll).permit(:employee_id, :pay_date, :gross_pay, :net_pay, :tax_deductions, :leave_deductions, :other_deductions)
     end
 
     def parse_pay_date(date_string)

@@ -46,8 +46,8 @@
           <p class="text-lg font-semibold text-red-600"><%= number_to_currency(@payroll.tax_deductions) %></p>
         </div>
         <div class="bg-purple-50 p-4 rounded-lg">
-          <p class="text-sm font-medium text-gray-600">Benefits</p>
-          <p class="text-lg font-semibold text-purple-600"><%= number_to_currency(@payroll.benefits_deductions) %></p>
+          <p class="text-sm font-medium text-gray-600">Leave</p>
+          <p class="text-lg font-semibold text-purple-600"><%= number_to_currency(@payroll.leave_deductions) %></p>
         </div>
         <div class="bg-yellow-50 p-4 rounded-lg">
           <p class="text-sm font-medium text-gray-600">Other</p>
@@ -60,7 +60,7 @@
       <div class="flex justify-between items-center">
         <div>
           <p class="text-sm font-medium text-gray-600">Total Deductions</p>
-          <p class="text-lg"><%= number_to_currency(@payroll.tax_deductions + @payroll.benefits_deductions + @payroll.other_deductions) %></p>
+          <p class="text-lg"><%= number_to_currency(@payroll.tax_deductions + @payroll.leave_deductions + @payroll.other_deductions) %></p>
         </div>
         <div class="text-right">
           <p class="text-sm font-medium text-gray-600">Net Pay</p>

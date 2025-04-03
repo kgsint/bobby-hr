@@ -7,7 +7,7 @@ class CreateLeaveRequests < ActiveRecord::Migration[7.1]
       t.string :leave_type
       t.string :status, default: "pending"
       t.date :approved_at
-
+      t.string :reason
       t.integer :company_id
 
       t.timestamps

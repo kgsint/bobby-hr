@@ -5,7 +5,7 @@ class LeaveRequestsController < ApplicationController
 
   # GET /leave_requests or /leave_requests.json
   def index
-    @leave_requests = LeaveRequest.all
+    @leave_requests = LeaveRequest.all.order(created_at: :desc)
   end
 
   # GET /leave_requests/1 or /leave_requests/1.json
@@ -74,7 +74,7 @@ class LeaveRequestsController < ApplicationController
     end
 
     def leave_request_params
-      params.require(:leave_request).permit(:from, :to, :leave_type, :status)
+      params.require(:leave_request).permit(:from, :to, :leave_type, :status, :reason)
     end
 
     def admin_only
