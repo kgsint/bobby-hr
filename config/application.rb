@@ -15,5 +15,8 @@ module BobbyHr1
     # session name
     config.session_store :cookie_store, key: "bobby_hr_sess"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # Define office IPs
+    config.office_ips = ['192.168.100.6', '192.168.110.41']
   end
 end

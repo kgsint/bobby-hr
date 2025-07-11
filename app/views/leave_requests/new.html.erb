@@ -6,11 +6,35 @@
 
     <div class="p-6 sm:p-8">
       <%= form_with model: @leave_request, local: true, class: "space-y-6" do |form| %>
+        <!-- Leave Type -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <%= form.label :leave_type, "Leave Type", class: "block text-sm font-medium text-gray-700" %>
+            <div class="relative">
+              <%= form.select :leave_type, options_for_select(["Casual", "Sick", "Annual", "Other"]), {}, class: "appearance-none block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <%= form.label :leave_duration, "Leave Duration", class: "block text-sm font-medium text-gray-700" %>
+            <div class="relative">
+              <%= form.select :leave_duration, 
+                              options_for_select([["Full Day", "full_day"], ["Half Day", "half_day"]], form.object.leave_duration || "full_day"),
+                              {},
+                              class: "appearance-none block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="space-y-1">
             <%= form.label :from, "Start Date", class: "block text-sm font-medium text-gray-700" %>
             <div class="relative rounded-md shadow-sm">
-              <%= form.date_field :from, class: "block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm", placeholder: "Select date", required: true %>
+              <%= form.date_field :from, class: "block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm date", placeholder: "Select date", required: true %>
               <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               </div>
             </div>
@@ -19,22 +43,9 @@
           <div class="space-y-1">
             <%= form.label :to, "End Date", class: "block text-sm font-medium text-gray-700" %>
             <div class="relative rounded-md shadow-sm">
-              <%= form.date_field :to, class: "block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm", placeholder: "Select date", required: true %>
+              <%= form.date_field :to, class: "block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm date", placeholder: "Select date", required: true %>
               <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
               </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Leave Type -->
-        <div class="space-y-1">
-          <%= form.label :leave_type, "Leave Type", class: "block text-sm font-medium text-gray-700" %>
-          <div class="relative">
-            <%= form.select :leave_type, options_for_select(["Casual", "Sick", "Other"]), {}, class: "appearance-none block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
             </div>
           </div>
         </div>
@@ -45,8 +56,8 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="pt-4">
-          <%= form.submit "Submit Request", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200" %>
+        <div class="pt-4 flex justify-end">
+          <%= form.submit "Submit Request", class: "w-25  py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200" %>
         </div>
       <% end %>
     </div>

@@ -2,7 +2,7 @@ module Chitoge
   class CompaniesController < BaseChitogeController
     layout 'admin'
     before_action :set_company, only: %i[ show edit update destroy ]
-    before_action :redirect_if_not_ghost_admin
+    # before_action :redirect_if_not_ghost_admin
 
     # GET /companies or /companies.json
     def index

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_03_084651) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_04_184724) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,11 +56,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_03_084651) do
     t.decimal "hourly_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "casual_leave_balance", default: 12, null: false
-    t.integer "sick_leave_balance", default: 10, null: false
-    t.integer "annual_leave_balance", default: 15, null: false
-    t.integer "excess_casual_leave"
-    t.integer "excess_sick_leave"
+    t.float "casual_leave_balance", default: 12.0, null: false
+    t.float "sick_leave_balance", default: 10.0, null: false
+    t.float "annual_leave_balance", default: 15.0, null: false
+    t.float "excess_casual_leave"
+    t.float "excess_sick_leave"
+    t.float "excess_annual_leave"
   end
 
   create_table "leave_requests", force: :cascade do |t|
@@ -74,6 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_03_084651) do
     t.integer "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "leave_duration"
   end
 
   create_table "payrolls", force: :cascade do |t|

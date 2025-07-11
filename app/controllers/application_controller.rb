@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   def current_employee
     if current_user && current_user.email
-      @current_employee ||= Employee.find_by(email: current_user.email)
+      @current_employee = Employee.find_by(email: current_user.email)
     end
   end
 

@@ -1,68 +1,215 @@
-<div class="container mx-auto px-4">
-  <% if notice.present? %>
-    <p class="flex py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block text-center justify-center" id="notice"><%= notice %></p>
-  <% end %>
-
-  <% content_for :title, "Employees" %>
-  
-  <h1 class="text-2xl font-bold text-center text-gray-800 mb-6 mt-5">Leave Requests</h1>
-  <div class="overflow-x-auto shadow-md sm:rounded-lg container mx-auto mt-10">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 table-auto">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-        <tr>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Employee</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">From</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">To</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Type</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase">Status</th>
-          <th class="px-6 py-3 text-center text-sm font-semibold text-gray-600 uppercase text-center">Action</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-200">
-        <% if @leave_requests.empty? %>
-          <tr class="bg-white border-b">
-            <td colspan="8" class="px-6 py-4 text-center text-gray-500">
-              There is no leave requests.
-            </td>
-          </tr>
-        <% else %>
-          <% @leave_requests.each do |leave_request| %>
-            <tr class="hover:bg-gray-50 transition">
-              <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.employee.name %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.from %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.to %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-gray-700 text-center"><%= leave_request.leave_type %></td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <span class="px-2 py-1 rounded text-xs font-semibold">
-                  <p>
-                    <% case leave_request.status %>
-                    <% when "approved" %>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><%= leave_request.status %></span>
-                    <% when "pending" %>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><%= leave_request.status %></span>
-                    <% else %>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"><%= leave_request.status %></span>
-                    <% end %>
-                  </p>
-                </span>
-                
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap flex justify-center space-x-4 text-center">
-                <%= form_with url: approve_leave_request_path(leave_request), method: :patch do |form| %>
-                  <%= form.submit "Approve", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
-                <% end %>
-              
-                <%= form_with url: decline_leave_request_path(leave_request), method: :patch do |form| %>
-                  <%= form.submit "Decline", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
+<div class="bg-gray-100 min-h-screen flex w-full">
+  <div class="p-4 w-full">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-800">Leave Requests</h1>
+      
+      <div class="flex items-center space-x-2">
+            
+        <% if @view == 'calendar' %>
+          <div class="flex items-center ml-4">
+            <%= button_tag type: :button, class: "px-2 py-1 rounded-md text-gray-700 hover:bg-gray-100", id: 'prev-month' do %>
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            <% end %>
+            
+            <span class="mx-2 text-sm font-medium"><%= @current_date.strftime('%B %Y') %></span>
+            
+            <%= button_tag type: :button, class: "px-2 py-1 rounded-md text-gray-700 hover:bg-gray-100", id: 'next-month' do %>
+              <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            <% end %>
+          </div>
         <% end %>
-      </tbody>
-    </table>
+      </div>
+    </div>
+
+    <% if @view == 'calendar' %>
+      <!-- Calendar View -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="grid grid-cols-7 gap-px bg-gray-200">
+          <% Date::DAYNAMES.each do |day| %>
+            <div class="bg-gray-100 py-2 text-center text-xs font-semibold text-gray-700">
+              <%= day[0..2] %>
+            </div>
+          <% end %>
+          
+          <% (@start_date..@end_date).each do |date| %>
+            <div class="bg-white min-h-24 p-1 border border-gray-100">
+              <div class="text-right text-sm <%= date == Date.today ? 'font-bold text-blue-600' : 'text-gray-700' %>">
+                <%= date.day %>
+              </div>
+              
+              <% if @leave_requests_by_date[date] %>
+                <div class="mt-1 space-y-1">
+                  <% @leave_requests_by_date[date].each do |request| %>
+                    <div class="text-xs p-1 rounded truncate 
+                        <%= case request.status
+                            when 'approved' then 'bg-green-100 text-green-800'
+                            when 'pending' then 'bg-yellow-100 text-yellow-800'
+                            else 'bg-red-100 text-red-800'
+                            end %>">
+                      <%= request.employee.name %>: <%= request.leave_type.titleize %>
+                      <% if request.leave_duration == 'half_day' %>
+                        (Half Day)
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <!-- List View -->
+      <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">From</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">To</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @leave_requests.empty? %>
+              <tr>
+                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No leave requests found.</td>
+              </tr>
+            <% else %>
+              <% @leave_requests.each do |leave_request| %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= leave_request.employee.name %>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= leave_request.from.strftime('%b %d, %Y') %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= leave_request.to.strftime('%b %d, %Y') %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= leave_request.leave_type.titleize %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= leave_request.leave_duration&.humanize&.titleize || '-' %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <%= case leave_request.status
+                          when 'approved' then 'bg-green-100 text-green-800'
+                          when 'pending' then 'bg-yellow-100 text-yellow-800'
+                          else 'bg-red-100 text-red-800'
+                          end %>">
+                      <%= leave_request.status.titleize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap flex justify-center space-x-4 text-center">
+                    <%= form_with url: approve_leave_request_path(leave_request), method: :patch do |form| %>
+                      <%= form.submit "Approve", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
+                    <% end %>
+                  
+                    <%= form_with url: decline_leave_request_path(leave_request), method: :patch do |form| %>
+                      <%= form.submit "Decline", class: "px-4 py-2 text-sm font-medium #{leave_request.status == 'pending' ? 'bg-red-500 hover:bg-red-600' : 'bg-gray-300 cursor-not-allowed'} text-white rounded-lg transition", disabled: leave_request.status != 'pending' %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="bg-white rounded-lg shadow-md mt-4 p-4 flex items-center justify-between">
+        <div class="flex-1 flex justify-between items-center">
+          <div class="text-sm text-gray-700">
+            Showing <span class="font-medium"><%= @offset + 1 %></span> to 
+            <span class="font-medium"><%= [@offset + @per_page, @total_count].min %></span> of 
+            <span class="font-medium"><%= @total_count %></span> results
+          </div>
+          
+          <div class="flex space-x-2">
+            <% if @page > 1 %>
+              <%= link_to 'Previous', leave_requests_path(view: @view, page: @page - 1, per_page: @per_page), 
+                  class: "px-3 py-1 rounded-md text-sm bg-gray-100 text-gray-700 hover:bg-gray-200" %>
+            <% else %>
+              <span class="px-3 py-1 rounded-md text-sm bg-gray-200 text-gray-500 cursor-not-allowed">Previous</span>
+            <% end %>
+            
+            <% if @page < @total_pages %>
+              <%= link_to 'Next', leave_requests_path(view: @view, page: @page + 1, per_page: @per_page), 
+                  class: "px-3 py-1 rounded-md text-sm bg-gray-100 text-gray-700 hover:bg-gray-200" %>
+            <% else %>
+              <span class="px-3 py-1 rounded-md text-sm bg-gray-200 text-gray-500 cursor-not-allowed">Next</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Calendar navigation
+    if (document.getElementById('prev-month')) {
+      const currentUrl = new URL(window.location.href);
+      const view = '<%= @view %>';
+      
+      document.getElementById('prev-month').addEventListener('click', function() {
+        const currentDate = new Date('<%= @current_date.to_s %>');
+        const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        currentUrl.searchParams.set('date', prevMonth.toISOString().split('T')[0]);
+        currentUrl.searchParams.set('view', view);
+        window.location.href = currentUrl.href;
+      });
+      
+      document.getElementById('next-month').addEventListener('click', function() {
+        const currentDate = new Date('<%= @current_date.to_s %>');
+        const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+        currentUrl.searchParams.set('date', nextMonth.toISOString().split('T')[0]);
+        currentUrl.searchParams.set('view', view);
+        window.location.href = currentUrl.href;
+      });
+    }
 
+    // Smooth scroll for pagination
+    document.querySelectorAll('a[href*="page="]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        if (!link.classList.contains('cursor-not-allowed')) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
 
+    // Close modal when clicking outside or on close button
+    document.addEventListener('click', function(event) {
+      if (event.target.closest('.bg-gray-500') || event.target.closest('[data-action="click->modal#close"]')) {
+        const modal = document.querySelector('.fixed.inset-0.z-50');
+        if (modal) modal.remove();
+      }
+    });
+
+    // Close modal when pressing escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        const modal = document.querySelector('.fixed.inset-0.z-50');
+        if (modal) modal.remove();
+      }
+    });
+  });
+
+  
+</script>

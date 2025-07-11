@@ -1,6 +1,7 @@
 // Entry point for the build script in your package.json
 
 import "htmx.org";
+import "flatpickr";
 
 setTimeout(function () {
     var noticeElement = document.getElementById('notice');

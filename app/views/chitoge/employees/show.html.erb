@@ -109,7 +109,7 @@
           <h2 class="text-xl font-semibold text-white">Leave Balance</h2>
         </div>
         <div class="p-6">
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div class="bg-blue-50 p-4 rounded-lg text-center">
               <p class="text-sm font-medium text-blue-800">Casual Leave</p>
               <p class="text-2xl font-bold <%= @employee.casual_leave_balance.negative? ? 'text-red-600' : 'text-blue-600' %>">
@@ -120,6 +120,12 @@
               <p class="text-sm font-medium text-green-800">Sick Leave</p>
               <p class="text-2xl font-bold <%= @employee.sick_leave_balance.negative? ? 'text-red-600' : 'text-green-600' %>">
                 <%= @employee.sick_leave_balance %>
+              </p>
+            </div>
+            <div class="bg-yellow-50 p-4 rounded-lg text-center">
+              <p class="text-sm font-medium text-yellow-800">Annual Leave</p>
+              <p class="text-2xl font-bold <%= @employee.annual_leave_balance.negative? ? 'text-red-600' : 'text-yellow-600' %>">
+                <%= @employee.annual_leave_balance %>
               </p>
             </div>
           </div>

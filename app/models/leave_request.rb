@@ -7,13 +7,13 @@ class LeaveRequest < ApplicationRecord
   validates :from, :to, :leave_type, presence: true
   validates :status, inclusion: { in: %w[pending approved declined] }, allow_nil: true
   validate :valid_date_range
+  validates :leave_duration, inclusion: { in: %w[full_day half_day], message: "%{value} is not a valid duration" }
+  validate :half_day_must_be_single_day, if: -> { leave_duration == 'half_day' }
 
   def approved?
     status == 'approved'
   end
 
-
-  private
 
   def valid_date_range
     errors.add(:to, "must be after the start date") if from && to && from > to
@@ -21,7 +21,8 @@ class LeaveRequest < ApplicationRecord
 
 
   def deduct_leave_balance
-    days = (to - from).to_i + 1
+    days = leave_duration == 'half_day' ? 0.5 : (to - from).to_i + 1
+
 
     case leave_type
     when 'Casual'
@@ -42,6 +43,22 @@ class LeaveRequest < ApplicationRecord
       else
         employee.update!(excess_sick_leave: 0)
       end
+    when 'Annual'
+      new_balance = employee.annual_leave_balance - days
+      employee.update!(annual_leave_balance: new_balance)
+
+      if new_balance.negative?
+        employee.update!(excess_annual_leave: new_balance.abs)
+      else
+        employee.update!(excess_annual_leave: 0)
+      end
     end
+
   end
+  private
+
+  def half_day_must_be_single_day
+    errors.add(:leave_duration, "must be for a single day when half day") if from != to
+  end
+
 end

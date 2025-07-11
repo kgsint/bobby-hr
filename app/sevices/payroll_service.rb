@@ -1,13 +1,13 @@
 class PayrollService
   DEFAULT_TAX_RATE = 0.1
-  DEFAULT_LEAVE_RATE = 0
+  # DEFAULT_LEAVE_RATE = 0
   LATE_PENALTY_PER_DAY = 1500 
 
-  def initialize(employee, pay_date, tax_rate: DEFAULT_TAX_RATE, leave_rate: DEFAULT_LEAVE_RATE)
+  def initialize(employee, pay_date, tax_rate: DEFAULT_TAX_RATE)
     @employee = employee
     @pay_date = pay_date
     @tax_rate = tax_rate
-    @leave_rate = leave_rate
+    # @leave_rate = leave_rate
   end
 
   def generate_payroll
@@ -35,7 +35,7 @@ class PayrollService
       leave_deductions: deductions[:leave],
       other_deductions: deductions[:other]
     )
-    @employee.update(excess_casual_leave: 0, excess_sick_leave: 0) if payroll.persisted?
+    @employee.update(excess_casual_leave: 0, excess_sick_leave: 0, excess_annual_leave: 0) if payroll.persisted?
     payroll
   rescue => e
     Rails.logger.error "Payroll generation failed: #{e.message}"
@@ -66,11 +66,11 @@ class PayrollService
     end
   end
 
-  def calculate_hourly_pay
-    hours_worked = calculate_hours_worked
-    raise "Hourly rate not set for employee" unless @employee.hourly_rate.present?
-    @employee.hourly_rate * hours_worked
-  end
+  # def calculate_hourly_pay
+  #   hours_worked = calculate_hours_worked
+  #   raise "Hourly rate not set for employee" unless @employee.hourly_rate.present?
+  #   @employee.hourly_rate * hours_worked
+  # end
 
   def has_late_attendances?
     @employee.attendances
@@ -79,15 +79,14 @@ class PayrollService
              .exists?
   end
 
-  def calculate_hours_worked
-    # More flexible date range handling
-    start_date = @pay_date.beginning_of_month
-    end_date = @pay_date.end_of_month
+  # def calculate_hours_worked
+  #   start_date = @pay_date.beginning_of_month
+  #   end_date = @pay_date.end_of_month
     
-    @employee.attendances
-             .where(date: start_date..end_date)
-             .sum(:hours_worked)
-  end
+  #   @employee.attendances
+  #            .where(date: start_date..end_date)
+  #            .sum(:hours_worked)
+  # end
 
   def calculate_deductions(gross_pay)
     {
@@ -107,18 +106,30 @@ class PayrollService
   end
 
   def calculate_leave_deductions(gross_pay)
-    daily_rate = gross_pay / 30.0
-    
+    daily_rate = gross_pay / @pay_date.end_of_month.day
     deductions = 0
     
-    if @employee.excess_casual_leave.to_i > 0
+    if @employee.excess_casual_leave > 0
       deductions += daily_rate * @employee.excess_casual_leave
-      Rails.logger.info "Deducting #{@employee.excess_casual_leave} casual leave days"
     end
     
-    if @employee.excess_sick_leave.to_i > 0
+    if @employee.excess_sick_leave > 0
       deductions += daily_rate * @employee.excess_sick_leave
     end
+
+    if @employee.excess_annual_leave > 0
+      deductions += daily_rate * @employee.excess_annual_leave
+    end
+
+    # approved_leaves = @employee.leave_requests.where(
+    #   status: 'approved',
+    #   from: @pay_date.beginning_of_month..@pay_date.end_of_month
+    # )
+
+    # approved_leaves.each do |leave|
+    #   leave_days = leave.leave_duration == 'half_day' ? 0.5 : 1.0
+    #   deductions += daily_rate * leave_days
+    # end
     
     deductions.round
   end

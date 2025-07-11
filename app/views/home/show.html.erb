@@ -16,7 +16,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> 
       <!-- Leaves Summary Card -->
       <div class="shadow-lg">
-        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow">
           <div class="flex justify-between h-full">
             <div class="text-center">
               <%= render_svg 'clock' %>
@@ -47,7 +47,7 @@
     
       <!-- Total Late Card -->
       <div class="shadow-lg">
-        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow">
           <div class="h-full flex flex-col items-center justify-center gap-4">
             <span class="flex items-center gap-4">
               <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,7 @@
     
       <!-- Hours Worked Card -->
       <div class="shadow-lg">
-        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+        <a href="#" class="block h-full p-6 bg-white border border-gray-200 rounded-lg shadow">
           <div class="h-full flex flex-col justify-center items-center gap-4">
             <!-- Icon -->
             <span class="flex items-center gap-4">
@@ -84,7 +84,12 @@
                 <%= @employee.sick_leave_balance %>
               </span>
             </div>
-            <!-- Label -->
+            <div>
+              <span class="text-sm">Annual Leave:</span>
+              <span class="font-semibold <%= @employee.annual_leave_balance.negative? ? 'text-red-600' : 'text-green-600' %>">
+                <%= @employee.annual_leave_balance %>
+              </span>
+            </div>
           </div>
         </a>
       </div>
@@ -100,6 +105,7 @@
               <th class="py-2 px-4 border-b">Date</th>
               <th class="py-2 px-4 border-b">Check-In</th>
               <th class="py-2 px-4 border-b">Check-Out</th>
+              <th class="py-2 px-4 border-b">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -108,6 +114,14 @@
                 <td class="py-2 px-4 border-b"><%= attendance.date.strftime("%B %d, %Y") %></td>
                 <td class="py-2 px-4 border-b"><%= attendance.checkin_time.strftime("%I:%M %p") if attendance.checkin_time %></td>
                 <td class="py-2 px-4 border-b"><%= attendance.checkout_time.strftime("%I:%M %p") if attendance.checkout_time %></td>
+                <td class="py-2 px-4 border-b">
+                  <% case attendance.status %>
+                    <% when "late" %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800"><%= attendance.status %></span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><%= attendance.status %></span>
+                  <% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
@@ -193,7 +207,6 @@
       </div>
     </div>
 
-    <!-- Attendance Records -->
     
   </div>
 </div>

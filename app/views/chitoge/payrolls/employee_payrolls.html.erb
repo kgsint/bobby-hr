@@ -11,7 +11,9 @@
           <tr>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Pay Date</th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Net Pay</th>
+            <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Deductions</th>
             <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700 uppercase text-center">Details</th>
+
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -33,7 +35,7 @@
                 </td>
               
                 
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">
                   <%= number_to_currency(payroll.other_deductions) %>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 text-center">

@@ -1,7 +1,10 @@
+module Chitoge
+
+
 class Chitoge::DepartmentsController < BaseChitogeController
   layout 'admin'
   before_action :set_department, only: %i[ show edit update destroy ]
-  before_action :require_admin
+  # before_action :require_admin
 
   # GET /departments or /departments.json
   def index
@@ -68,4 +71,5 @@ class Chitoge::DepartmentsController < BaseChitogeController
     def require_admin
       redirect_to root_path, alert: "You are not authorized to access this page." unless current_user.role === 'admin'
     end
+end
 end
